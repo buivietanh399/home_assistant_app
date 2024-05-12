@@ -5,6 +5,11 @@ import colors from "../constants/colors";
 import Smart from "../screens/Smart";
 import Setting from "../screens/Setting";
 import { RouteProp } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Entypo from '@expo/vector-icons/Entypo';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface ScreenOptionsProps {
     route: RouteProp<Record<string, object | undefined>, string>;
@@ -17,20 +22,14 @@ const screenOptions = ({ route }: ScreenOptionsProps) => ({
     tabBarActiveTintColor: colors.primary,
     tabBarInactiveTintColor: colors.inactive,
     tabBarIcon: ({ focused, color, size }: { focused: boolean, color: string, size: number }) => {
-        let screenName = route.name;
-        if (screenName == "Home") {
-            return <Image
-                style={{ width: 25, height: 25, marginTop: 3 }}
-                source={focused ? require("../../assets/icons/ico_home_active.png") : require("../../assets/icons/ico_home_inactive.png")} />
-        }
-        else if (screenName == "Smart") {
-            return <Image
-                style={{ width: 25, height: 25, marginTop: 3 }}
-                source={focused ? require("../../assets/icons/ico_follow_active.png") : require("../../assets/icons/ico_follow_inactive.png")} />
-        } else if (screenName == "Setting") {
-            return <Image
-                style={{ width: 25, height: 25, marginTop: 3 }}
-                source={focused ? require("../../assets/icons/ico_setting_active.png") : require("../../assets/icons/ico_setting_inactive.png")} />
+        let iconName;
+
+        if (route.name === 'Home') {
+            return <Entypo name="home" size={size} color={color} />;
+        } else if (route.name === 'Smart') {
+            return <MaterialIcons name="library-add-check" size={size} color={color} />;
+        } else if (route.name === 'Setting') {
+            return <Ionicons name="settings-sharp" size={size} color={color} />
         }
     }
 });
