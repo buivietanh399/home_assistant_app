@@ -18,7 +18,7 @@ import {
 
 import Navigator from './src/navigate/Navigator';
 
-function App(): React.JSX.Element {
+function App() {
 
   return (
     <Navigator />

@@ -9,12 +9,12 @@ import {
     ScrollView,
     Dimensions,
 } from "react-native";
-import GlobalStyles from "../components/GlobalStyles";
 import colors from "../constants/colors";
+import { styles } from "../components/GlobalStyles";
 
-export default function Setting(): React.JSX.Element {
+export default function Setting() {
     return (
-        <SafeAreaView style={[GlobalStyles.customSafeArea, { backgroundColor: colors.white}]}>
+        <SafeAreaView style={[styles.customSafeArea, { backgroundColor: colors.white}]}>
             <Text>Setting screen</Text>
         </SafeAreaView>
     );
