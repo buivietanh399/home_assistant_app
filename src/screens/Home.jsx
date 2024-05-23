@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     SafeAreaView,
     Text,
@@ -12,33 +12,67 @@ import {
 } from "react-native";
 import Colors from "../constants/colors";
 import { styles } from "../components/GlobalStyles";
-import { devices } from "../../utils/dummyData";
 import { useNavigation } from "@react-navigation/native";
+import { userKey } from "../constants/common";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getData } from "../../utils/commonRequest";
+import useStore from "../../utils/store";
 
 export default function Home() {
     //navigation
     const navigation = useNavigation();
     //function of navigate 
-    const { navigate, goBack } = navigation;
-    const handleDetail = (id) => {
-        navigate('DeviceDetail', { id: id });
+    const { navigate, goBack, replace } = navigation;
+    /**
+     * check authen
+     */
+    const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [devices, setDevices] = useState([]);
+    useEffect(() => {
+        const checkCurrentUser = async () => {
+            try {
+                const user = await AsyncStorage.getItem(userKey);
+                if (user !== null) {
+                    var parsedUser = JSON.parse(user);
+                    setCurrentUser(JSON.parse(user));
+                    const allDevices = await getData('/api/states', parsedUser.token)
+                    setDevices(allDevices);
+                } else {
+                    replace('Login');
+                }
+            } catch (error) {
+                console.error('Failed to load current user:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        checkCurrentUser();
+    }, []);
+    /**
+     * handle pick 1 device
+     * @param {*} id 
+     */
+    const handleDetail = (entityId) => {
+        console.log(entityId);
+        setEntityId(entityId);
+        navigate('DeviceDetail');
     }
     return (
         <SafeAreaView style={[styles.customSafeArea]}>
-            <ScrollView>
-
-            <Text style={styles.h1}>Tất cả thiết bị</Text>
-            <View style={homeCss.container}>
-                {devices.map((item, index) => {
-                    return (
-                        <TouchableOpacity style={homeCss.item} key={index} onPress={() => handleDetail(item.id)}>
-                            <Text style={homeCss.itemTitle}>{item.attributes.friendly_name}</Text>
-                            <View style={homeCss.itemIcon}>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                })}
-            </View>
+            <ScrollView style={styles.container}>
+                <Text style={styles.h1}>Tất cả thiết bị</Text>
+                <View style={homeCss.container}>
+                    {devices.map((item, index) => {
+                        return (
+                            <TouchableOpacity style={homeCss.item} key={index} onPress={() => handleDetail(item.entity_id)}>
+                                <Text style={homeCss.itemTitle}>{item.attributes.friendly_name}</Text>
+                                <View style={homeCss.itemIcon}>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    })}
+                </View>
             </ScrollView>
         </SafeAreaView>
     );

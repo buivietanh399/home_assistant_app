@@ -10,6 +10,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import DeviceDetail from "../screens/DeviceDetail";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = ({ route }) => ({
@@ -19,7 +20,7 @@ const screenOptions = ({ route }) => ({
     tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
-        if (route.name === 'Home') {
+        if (route.name === 'DeviceDetail') {
             return <Entypo name="home" size={size} color={color} />;
         } else if (route.name === 'Smart') {
             return <MaterialIcons name="library-add-check" size={size} color={color} />;
@@ -36,11 +37,11 @@ export default function UIScreen() {
     // );
 
     return (
-        <Tab.Navigator initialRouteName="Home" screenOptions={screenOptions}
+        <Tab.Navigator initialRouteName="DeviceDetail" screenOptions={screenOptions}
         >
             <Tab.Screen
-                name="Home"
-                component={Home}
+                name="DeviceDetail"
+                component={DeviceDetail}
                 // options={{
                 //     title: currentLanguage == 'vi' ? 'Trang chủ' : 'Home',
                 //     tabBarActiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
@@ -52,7 +53,7 @@ export default function UIScreen() {
                     tabBarInactiveBackgroundColor: colors.white,
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Smart"
                 component={Smart}
                 // options={{
@@ -65,7 +66,7 @@ export default function UIScreen() {
                     tabBarActiveBackgroundColor: colors.white,
                     tabBarInactiveBackgroundColor: colors.white,
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="Setting"
                 // component={Setting} options={{
