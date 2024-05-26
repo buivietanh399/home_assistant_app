@@ -18,6 +18,6 @@ export const switchColor = [
     'Yellow',
     'Magenta',
     'Cyan',
-    'WarmWhite',
-    'WarmYellow'
+    'Warm White',
+    'Warm Yellow'
 ]

@@ -25,13 +25,15 @@ import { switchColor } from "../constants/switchColor";
 import useStore from "../../utils/store";
 import { getData, postData } from "../../utils/commonRequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 export default function DeviceDetail(props) {
     //navigation
     const navigation = useNavigation();
     const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
 
-    const [ nowUser, setNowUser ] = useState(null);
+    const [nowUser, setNowUser] = useState(null);
     //function of navigate 
     const { navigate, goBack } = navigation;
     const [powerOnBehavior, setPowerOnBehavior] = useState('On');
@@ -92,16 +94,18 @@ export default function DeviceDetail(props) {
         setModalBrightness(false);
     };
 
-    const [onColor, setOnColor] = useState("White");
+    const [onColor, setOnColor] = useState("");
     const [modalOnColor, setModalOnColor] = useState(false);
-    const handleOnColorPress = (value) => {
+    const handleOnColorPress = async (value) => {
+        const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('onColor'), option: value }, nowUser.token);
         setOnColor(value);
         setModalOnColor(false);
     };
 
-    const [offColor, setOffColor] = useState("Magenta");
+    const [offColor, setOffColor] = useState("");
     const [modalOffColor, setModalOffColor] = useState(false);
-    const handleOffColorPress = (value) => {
+    const handleOffColorPress = async (value) => {
+        const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor'), option: value }, nowUser.token);
         setOffColor(value);
         setModalOffColor(false);
     };
@@ -227,6 +231,24 @@ export default function DeviceDetail(props) {
         }
     }
 
+    const fetchOnColor = async (token) => {
+        try {
+            let device = await getData(`/api/states/${switchKey.get('onColor')}`, token)
+            setOnColor(device.state)
+        } catch (error) {
+            console.error('Failed to load device:', error);
+        }
+    }
+
+    const fetchOffColor = async (token) => {
+        try {
+            let device = await getData(`/api/states/${switchKey.get('offColor')}`, token)
+            setOffColor(device.state)
+        } catch (error) {
+            console.error('Failed to load device:', error);
+        }
+    }
+
     const fetchIndicator = async (token) => {
         try {
             let device = await getData(`/api/states/${switchKey.get('indicatorMode')}`, token)
@@ -251,6 +273,8 @@ export default function DeviceDetail(props) {
                     fetchPowerOnBehavior1(userParsed.token);
                     fetchPowerOnBehavior2(userParsed.token);
                     fetchBrightNess(userParsed.token);
+                    fetchOnColor(userParsed.token);
+                    fetchOffColor(userParsed.token);
                     fetchIndicator(userParsed.token);
                 } else {
                     replace('Login');
@@ -264,7 +288,7 @@ export default function DeviceDetail(props) {
 
     useEffect(() => {
         const intervalId = setInterval(fetchData, 500); // Gọi fetchData mỗi 0.5 giây
-    
+
         return () => clearInterval(intervalId);
     }, [nowUser]);
     const fetchData = async () => {
@@ -283,6 +307,99 @@ export default function DeviceDetail(props) {
     const toUpperCaseFirtChar = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1)
     }
+
+    /**
+     * schedule
+     */
+    const [date1, setDate1] = useState('');
+    const [showDate1, setShowDate1] = useState(false);
+    const [showTime1, setShowTime1] = useState(false);
+    const [scheduleSwitchStatus1, setScheduleSwitchStatus1] = useState('');
+    const [showModalScheduleSwitchStatus1, setShowModalScheduleSwitchStatus1] = useState(false);
+
+    const handleDateSelected1 = (event, selectedDate) => {
+        let currentDate1 = selectedDate || date1;
+        setDate1(currentDate1);
+        setShowTime1(true);
+        setShowDate1(false);
+    };
+
+    const handleTimeSelected1 = (event, selectedTime) => {
+        setShowDate1(false);
+        let currentTime1 = selectedTime || date1;
+        setDate1(new Date(
+            date1.getFullYear(),
+            date1.getMonth(),
+            date1.getDate(),
+            currentTime1.getHours(),
+            currentTime1.getMinutes()
+        ));
+        setShowModalScheduleSwitchStatus1(true);
+        setShowTime1(false);
+    };
+
+    const toggleSwitchStatus1 = (status) => {
+        setScheduleSwitchStatus1(status);
+        setShowModalScheduleSwitchStatus1(false);
+        let now = new Date();
+        let msUntilTimeout = date1.getTime() - now.getTime();
+        if (msUntilTimeout > 0) {
+            setTimeout(() => {
+                alert("hết giờ");
+            }, msUntilTimeout);
+        } else {
+            allert("Thời gian đã chọn đã qua. Vui lòng chọn một thời điểm trong tương lai.");
+        }
+    };
+
+    const showDatePicker1 = () => {
+        setShowDate1(true);
+    };
+
+    const [date2, setDate2] = useState('');
+    const [showDate2, setShowDate2] = useState(false);
+    const [showTime2, setShowTime2] = useState(false);
+    const [scheduleSwitchStatus2, setScheduleSwitchStatus2] = useState('');
+    const [showModalScheduleSwitchStatus2, setShowModalScheduleSwitchStatus2] = useState(false);
+
+    const handleDateSelected2 = (event, selectedDate) => {
+        let currentDate2 = selectedDate || date2;
+        setDate2(currentDate2);
+        setShowTime2(true);
+        setShowDate2(false);
+    };
+
+    const handleTimeSelected2 = (event, selectedTime) => {
+        setShowDate2(false);
+        let currentTime2 = selectedTime || date2;
+        setDate2(new Date(
+            date2.getFullYear(),
+            date2.getMonth(),
+            date2.getDate(),
+            currentTime2.getHours(),
+            currentTime2.getMinutes()
+        ));
+        setShowTime2(false);
+        setShowModalScheduleSwitchStatus2(true)
+    };
+
+    const toggleSwitchStatus2 = (status) => {
+        setScheduleSwitchStatus2(status);
+        setShowModalScheduleSwitchStatus2(false);
+        let now = new Date();
+        let msUntilTimeout = date2.getTime() - now.getTime();
+        if (msUntilTimeout > 0) {
+            setTimeout(() => {
+                alert("hết giờ");
+            }, msUntilTimeout);
+        } else {
+            allert("Thời gian đã chọn đã qua. Vui lòng chọn một thời điểm trong tương lai.");
+        }
+    };
+    const showDatePicker2 = () => {
+        setShowDate2(true);
+    };
+
     return (
         <SafeAreaView style={[styles.customSafeArea, { backgroundColor: colors.white }]}>
             <ScrollView style={styles.container}>
@@ -578,6 +695,104 @@ export default function DeviceDetail(props) {
                         />
                     </View>
                     <View style={deviceCss.separator} />
+
+                    <TouchableOpacity style={deviceCss.switchRow} onPress={showDatePicker1}>
+                        <Text style={deviceCss.label}>Schedule L1</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={[deviceCss.label, { marginRight: 5 }]}>{scheduleSwitchStatus1 === 'On' ? 'Bật lúc' : (scheduleSwitchStatus1 === 'Off' ? 'Tắt lúc' : 'No')}</Text>
+                            <Text style={deviceCss.label}>{date1.toLocaleString()}</Text>
+                        </View>
+                        {(showDate1 && (
+                            <DateTimePicker
+                                value={date1}
+                                mode="date"
+                                display="default"
+                                onChange={handleDateSelected1}
+                                maximumDate={new Date(2300, 10, 20)}
+                                minimumDate={new Date(1950, 0, 1)}
+                            />
+                        ))
+                            ||
+                            (showTime1 && (
+                                <DateTimePicker
+                                    value={date1}
+                                    mode="time"
+                                    display="default"
+                                    onChange={handleTimeSelected1}
+                                />
+                            ))
+                        }
+                        <Modal
+                            // animationType="slide"
+                            transparent={true}
+                            visible={showModalScheduleSwitchStatus1}
+                            onRequestClose={() => setShowModalScheduleSwitchStatus1(false)}
+                        >
+                            <View style={deviceCss.modalContainer}>
+                                <View style={deviceCss.modalView}>
+                                    <Text style={deviceCss.modalText}>Select Power-on behavior</Text>
+                                    <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                        <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus1('On')}>
+                                            <Text style={deviceCss.buttonText}>On</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus1('Off')}>
+                                            <Text style={deviceCss.buttonText}>Off</Text>
+                                        </TouchableOpacity>
+                                    </ScrollView>
+                                </View>
+                            </View>
+                        </Modal>
+
+                    </TouchableOpacity>
+                    <View style={deviceCss.separator} />
+
+                    <TouchableOpacity style={deviceCss.switchRow} onPress={showDatePicker2}>
+                        <Text style={deviceCss.label}>Schedule L2</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={[deviceCss.label, { marginRight: 5 }]}>{scheduleSwitchStatus2 === 'On' ? 'Bật lúc' : (scheduleSwitchStatus2 === 'Off' ? 'Tắt lúc' : 'No')}</Text>
+                            <Text style={deviceCss.label}>{date2.toLocaleString()}</Text>
+                        </View>
+                        {(showDate2 && (
+                            <DateTimePicker
+                                value={date2}
+                                mode="date"
+                                display="default"
+                                onChange={handleDateSelected2}
+                                maximumDate={new Date(2300, 10, 20)}
+                                minimumDate={new Date(1950, 0, 1)}
+                            />
+                        ))
+                            ||
+                            (showTime2 && (
+                                <DateTimePicker
+                                    value={date2}
+                                    mode="time"
+                                    display="default"
+                                    onChange={handleTimeSelected2}
+                                />
+                            ))}
+                    </TouchableOpacity>
+                    <Modal
+                        // animationType="slide"
+                        transparent={true}
+                        visible={showModalScheduleSwitchStatus2}
+                        onRequestClose={() => setShowModalScheduleSwitchStatus2(false)}
+                    >
+                        <View style={deviceCss.modalContainer}>
+                            <View style={deviceCss.modalView}>
+                                <Text style={deviceCss.modalText}>Select Power-on behavior</Text>
+                                <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                    <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus2('On')}>
+                                        <Text style={deviceCss.buttonText}>On</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus2('Off')}>
+                                        <Text style={deviceCss.buttonText}>Off</Text>
+                                    </TouchableOpacity>
+                                </ScrollView>
+                            </View>
+                        </View>
+                    </Modal>
+                    <View style={deviceCss.separator} />
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -609,6 +824,10 @@ const deviceCss = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 16,
+    },
+    button: {
+        flex: 1, // Each button should take equal space
+        marginHorizontal: 5, // Optional: space between buttons
     },
     label: {
         fontSize: 16,
