@@ -20,9 +20,19 @@ export const styles = StyleSheet.create({
         width: 150,
         // backgroundColor: colors.gray_bg,F
     },
-    gobackText: {
-        fontSize: 22,
-        fontWeight: '600'
+    headerText: {
+        fontSize: 20,
+        fontWeight: '600',
+        flex: 1,
+        textAlign: 'center',
+        marginBottom: 8
+    },
+    subText: {
+        fontSize: 16,
+        flex: 1,
+        textAlign: 'center',
+        marginTop: -8,
+        marginBottom: 8
     },
     h1: {
         fontSize: 20,
@@ -30,5 +40,8 @@ export const styles = StyleSheet.create({
         marginBottom: 8
         // alignSelf: "center",
         // marginTop: 40
+    },
+    flexRow: {
+        flexDirection: 'row'
     }
 }); 

@@ -27,7 +27,7 @@ export default function Home() {
      * check authen
      */
     const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [devices, setDevices] = useState([]);
     useEffect(() => {
         const checkCurrentUser = async () => {
@@ -36,13 +36,38 @@ export default function Home() {
                 if (user !== null) {
                     var parsedUser = JSON.parse(user);
                     setCurrentUser(JSON.parse(user));
-                    const allDevices = await getData('/api/states', parsedUser.token)
-                    setDevices(allDevices);
+                    const allDevices = await getData('/api/states', parsedUser.token);
+                    var existingName = []
+                    var filteredData = []
+                    allDevices.forEach(item => {
+                        if (item.entity_id) {
+                            // console.log("item.entity_id = ", item.entity_id);
+                            if (item.entity_id.split('.')[1].slice(0, 2) == '0x') {
+                                const name = item.attributes.friendly_name.split('-')[0];
+                                if (existingName.length === 0) {
+                                    console.log("====" + name);
+                                    existingName.push(name)
+                                    filteredData.push(item);
+                                } else {
+                                    let existingGroup = existingName.find(groupName => groupName === name);
+                                    if (existingGroup) {
+                                        console.log("====" + name);
+                                        // existingGroup.devices.push(item);
+                                    } else {
+                                        console.log("====" + name);
+                                        existingName.push(name)
+                                        filteredData.push(item);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    setDevices(filteredData);
                 } else {
                     replace('Login');
                 }
             } catch (error) {
-                console.error('Failed to load current user:', error);
+                console.error(error);
             } finally {
                 setIsLoading(false);
             }
@@ -56,17 +81,26 @@ export default function Home() {
     const handleDetail = (entityId) => {
         console.log(entityId);
         setEntityId(entityId);
-        navigate('DeviceDetail');
+        if (entityId.split('_')[1] == '2gang') {
+            console.log('2gang nha');
+            // TODO: sửa lại chỗ này
+            navigate('DeviceDetail3');
+        } else if (entityId.split('_')[1] == '3gang') {
+            console.log('3gang nha');
+            navigate('DeviceDetail3');
+        } else {
+            alert("Thiết bị không hợp lệ!");
+        }
     }
     return (
         <SafeAreaView style={[styles.customSafeArea]}>
             <ScrollView style={styles.container}>
-                <Text style={styles.h1}>Tất cả thiết bị</Text>
+                <Text style={styles.headerText}>Tất cả thiết bị</Text>
                 <View style={homeCss.container}>
                     {devices.map((item, index) => {
                         return (
-                            <TouchableOpacity style={homeCss.item} key={index} onPress={() => handleDetail(item.entity_id)}>
-                                <Text style={homeCss.itemTitle}>{item.attributes.friendly_name}</Text>
+                            <TouchableOpacity style={homeCss.item} key={index} onPress={() => handleDetail(item.entity_id.split('.')[1].split('_')[0] + '_' + item.entity_id.split('.')[1].split('_')[1])}>
+                                <Text style={homeCss.itemTitle}>{item.attributes.friendly_name.split('-')[0]}</Text>
                                 <View style={homeCss.itemIcon}>
                                 </View>
                             </TouchableOpacity>

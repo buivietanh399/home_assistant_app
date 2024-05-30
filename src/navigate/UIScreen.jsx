@@ -20,7 +20,7 @@ const screenOptions = ({ route }) => ({
     tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
-        if (route.name === 'DeviceDetail') {
+        if (route.name === 'Home') {
             return <Entypo name="home" size={size} color={color} />;
         } else if (route.name === 'Smart') {
             return <MaterialIcons name="library-add-check" size={size} color={color} />;
@@ -37,11 +37,11 @@ export default function UIScreen() {
     // );
 
     return (
-        <Tab.Navigator initialRouteName="DeviceDetail" screenOptions={screenOptions}
+        <Tab.Navigator initialRouteName="Home" screenOptions={screenOptions}
         >
             <Tab.Screen
-                name="DeviceDetail"
-                component={DeviceDetail}
+                name="Home"
+                component={Home}
                 // options={{
                 //     title: currentLanguage == 'vi' ? 'Trang chủ' : 'Home',
                 //     tabBarActiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
@@ -53,7 +53,7 @@ export default function UIScreen() {
                     tabBarInactiveBackgroundColor: colors.white,
                 }}
             />
-            {/* <Tab.Screen
+            <Tab.Screen
                 name="Smart"
                 component={Smart}
                 // options={{
@@ -66,7 +66,7 @@ export default function UIScreen() {
                     tabBarActiveBackgroundColor: colors.white,
                     tabBarInactiveBackgroundColor: colors.white,
                 }}
-            /> */}
+            />
             <Tab.Screen
                 name="Setting"
                 // component={Setting} options={{

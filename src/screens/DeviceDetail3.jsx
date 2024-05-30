@@ -22,7 +22,7 @@ import { getData, postData } from "../../utils/commonRequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function DeviceDetail(props) {
+export default function DeviceDetail3(props) {
     //navigation
     const navigation = useNavigation();
     const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
@@ -119,6 +119,31 @@ export default function DeviceDetail(props) {
             }
         }
         setSwitchStatus2(!switchStatus2);
+    }
+
+    // TODO: sửa lại L3
+    const [switchStatus3, setSwitchStatus3] = useState(true);
+    const handleChangeSwitchStatus3 = async () => {
+        if (switchStatus3) {
+            const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') }, nowUser.token);
+            if (recordScenario) {
+                setScenario([...scenario, {
+                    url: `/api/services/switch/turn_off`,
+                    body: { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') },
+                    accessToken: nowUser.token
+                }])
+            }
+        } else {
+            const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') }, nowUser.token);
+            if (recordScenario) {
+                setScenario([...scenario, {
+                    url: `/api/services/switch/turn_on`,
+                    body: { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') },
+                    accessToken: nowUser.token
+                }])
+            }
+        }
+        setSwitchStatus3(!switchStatus3);
     }
 
     const [indicatorMode, setIndicatorMode] = useState('None');
@@ -284,6 +309,17 @@ export default function DeviceDetail(props) {
             console.error('Failed to load device:', error);
         }
     };
+    const fetchStatus3 = async (token) => {
+        try {
+            let device = await getData(`/api/states/${switchKey.get('state3_begin') + entityId + switchKey.get('state3_end')}`, token)
+            if (device.state != 'on' && device.state != 'off' && switchStatus3 == 'on' && switchStatus3 == 'off') {
+                alert("Thiết bị đã bị ngắt kết nối")
+            }
+            setSwitchStatus3(device.state === 'on' ? true : false)
+        } catch (error) {
+            console.error('Failed to load device:', error);
+        }
+    };
 
     const fetchBlacklight = async (token) => {
         try {
@@ -364,6 +400,7 @@ export default function DeviceDetail(props) {
             console.error('Failed to load device:', error);
         }
     }
+    // initial
     useEffect(() => {
         const checkCurrentUser = async () => {
             try {
@@ -374,6 +411,7 @@ export default function DeviceDetail(props) {
                     setNowUser(JSON.parse(user));
                     fetchStatus1(userParsed.token);
                     fetchStatus2(userParsed.token);
+                    fetchStatus3(userParsed.token);
                     fetchBlacklight(userParsed.token);
                     fetchChildLock(userParsed.token);
                     fetchPowerOnBehavior(userParsed.token);
@@ -792,6 +830,16 @@ export default function DeviceDetail(props) {
                         <Switch
                             value={switchStatus2}
                             onValueChange={handleChangeSwitchStatus2}
+                            style={{ height: 20 }}
+                        />
+                    </View>
+                    <View style={deviceCss.separator} />
+
+                    <View style={deviceCss.switchRow}>
+                        <Text style={deviceCss.label}>Status L3</Text>
+                        <Switch
+                            value={switchStatus3}
+                            onValueChange={handleChangeSwitchStatus3}
                             style={{ height: 20 }}
                         />
                     </View>

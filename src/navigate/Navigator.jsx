@@ -6,6 +6,9 @@ import Setting from "../screens/Setting";
 import Home from "../screens/Home";
 import Login from "../screens/Login";
 import DeviceDetail from "../screens/DeviceDetail";
+import Scenario from "../screens/Scenario";
+import Scenario3 from "../screens/Scenario3";
+import DeviceDetail3 from "../screens/DeviceDetail3";
 
 const Stack = createNativeStackNavigator();
 export default function Navigator() {
@@ -19,6 +22,9 @@ export default function Navigator() {
                 <Stack.Screen name={"Login"} component={Login} />
                 <Stack.Screen name={"Setting"} component={Setting} />
                 <Stack.Screen name={"DeviceDetail"} component={DeviceDetail} />
+                <Stack.Screen name={"DeviceDetail3"} component={DeviceDetail3} />
+                <Stack.Screen name={"Scenario"} component={Scenario} />
+                <Stack.Screen name={"Scenario3"} component={Scenario3} />
             </Stack.Navigator>
         </NavigationContainer>
     )
