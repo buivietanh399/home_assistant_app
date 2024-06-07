@@ -12,6 +12,7 @@ import {
 import { styles } from "../components/GlobalStyles";
 import colors from "../constants/colors";
 import { useNavigation } from "@react-navigation/native";
+import Entypo from '@expo/vector-icons/Entypo';
 
 export default function Base() {
     const navigation = useNavigation();

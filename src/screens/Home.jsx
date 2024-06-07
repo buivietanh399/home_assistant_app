@@ -45,16 +45,16 @@ export default function Home() {
                             if (item.entity_id.split('.')[1].slice(0, 2) == '0x') {
                                 const name = item.attributes.friendly_name.split('-')[0];
                                 if (existingName.length === 0) {
-                                    console.log("====" + name);
+                                    // console.log("====" + name);
                                     existingName.push(name)
                                     filteredData.push(item);
                                 } else {
                                     let existingGroup = existingName.find(groupName => groupName === name);
                                     if (existingGroup) {
-                                        console.log("====" + name);
+                                        // console.log("====" + name);
                                         // existingGroup.devices.push(item);
                                     } else {
-                                        console.log("====" + name);
+                                        // console.log("====" + name);
                                         existingName.push(name)
                                         filteredData.push(item);
                                     }
@@ -75,18 +75,16 @@ export default function Home() {
         checkCurrentUser();
     }, []);
     /**
-     * handle pick 1 device
-     * @param {*} id 
+     * STEP 2: check điều kiện của id để chuyển màn hình
      */
     const handleDetail = (entityId) => {
         console.log(entityId);
         setEntityId(entityId);
         if (entityId.split('_')[1] == '2gang') {
-            console.log('2gang nha');
-            // TODO: sửa lại chỗ này
-            navigate('DeviceDetail3');
+            console.log('2 công tắc');
+            navigate('DeviceDetail');
         } else if (entityId.split('_')[1] == '3gang') {
-            console.log('3gang nha');
+            console.log('3 công tắc');
             navigate('DeviceDetail3');
         } else {
             alert("Thiết bị không hợp lệ!");

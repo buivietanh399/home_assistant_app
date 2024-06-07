@@ -30,7 +30,19 @@ export default function Scenario() {
     const { navigate, goBack } = navigation;
     // Chi tiết kịch bản hiện tại
     const [scenarios, setScenarios] = useState([]);
-    const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId, scenarioId, setScenarioId, toggleSmartPage, setToggleSmartPage } = useStore();
+    const {
+        currentUser,
+        setCurrentUser,
+        removeCurrentUser,
+        entityId,
+        setEntityId,
+        scenarioId,
+        setScenarioId,
+        toggleSmartPage,
+        setToggleSmartPage,
+        entityName,
+        setEntityName
+    } = useStore();
     const fetchScenariosIfRunMode = async () => {
         try {
             const dataRes = await getDataBackend(`/api/scenarios/${scenarioId}`, currentUser.tokenBackend);
@@ -203,7 +215,7 @@ export default function Scenario() {
     const [offColor, setOffColor] = useState("");
     const [modalOffColor, setModalOffColor] = useState(false);
     const handleOffColorPress = async (value) => {
-        const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value }, nowUser.token);
+        // const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value }, nowUser.token);
         setOffColor(value);
         setModalOffColor(false);
         // if (recordScenario) {
@@ -546,6 +558,9 @@ export default function Scenario() {
     }
 
     const handleRunOrSaveScenario = async () => {
+        /**
+         * STEP 6: Chú ý check lại các key-value tương ứng trong Map để ghép lại thành entity id để đẩy kịch bản vào db
+         */
         // Luư kịch bản
         if (scenarioId == null) {
             if (scenarioName == null || scenarioName == '') {
@@ -554,14 +569,14 @@ export default function Scenario() {
                 var newScenario = [];
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: powerOnBehavior },
+                    body: { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: powerOnBehavior.toLowerCase() },
                 })
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: indicatorMode },
+                    body: { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: indicatorMode.toLowerCase() },
                 })
                 newScenario.push({
-                    url: `/api/services/switch/turn_${(backlightMode) ? 'on': 'off'}`,
+                    url: `/api/services/switch/turn_${(backlightMode) ? 'on' : 'off'}`,
                     body: { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') },
                 })
                 newScenario.push({
@@ -581,26 +596,26 @@ export default function Scenario() {
                     body: { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: offColor },
                 })
                 newScenario.push({
-                    url: `/api/services/switch/turn_${switchStatus1 ? 'on': 'off'}`,
+                    url: `/api/services/switch/turn_${switchStatus1 ? 'on' : 'off'}`,
                     body: { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') },
                 })
                 newScenario.push({
-                    url: `/api/services/switch/turn_${switchStatus2 ? 'on': 'off'}`,
+                    url: `/api/services/switch/turn_${switchStatus2 ? 'on' : 'off'}`,
                     body: { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') },
                 })
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: powerOnBehavior1 },
+                    body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: powerOnBehavior1.toLowerCase() },
                 })
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: powerOnBehavior2 },
+                    body: { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: powerOnBehavior2.toLowerCase() },
                 })
                 try {
                     let postNewScenario = {
                         userId: currentUser.customUserDetails.id + '',
                         name: scenarioName,
-                        entityId: entityId
+                        entityId: entityName
                     };
                     const res1 = await postDataBackend('/api/scenarios/create', postNewScenario, currentUser.tokenBackend);
                     console.log(postNewScenario);
@@ -924,7 +939,7 @@ export default function Scenario() {
                             <TextInput
                                 value={scenarioName}
                                 onChangeText={handleScenarioName}
-                                style={{ borderColor: 'gray', borderWidth: 1, width: '90%', height: 40, marginBottom: -10, marginTop: 8 }}
+                                style={{ borderColor: 'gray', borderWidth: 1, width: '100%', height: 40, marginBottom: -10, marginTop: 8, borderRadius: 8, paddingLeft: 10 }}
                             />
                         </View>
                     }

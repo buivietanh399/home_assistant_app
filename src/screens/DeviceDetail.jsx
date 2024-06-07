@@ -32,6 +32,9 @@ export default function DeviceDetail(props) {
     const { navigate, goBack } = navigation;
     const [powerOnBehavior, setPowerOnBehavior] = useState('On');
     const [modalPowerOnBehavior, setModalPowerOnBehavior] = useState(false);
+    /**
+     * STEP 4: Chú ý check lại các đường dẫn api Post và payload của chúng để phù hợp với thiết bị
+     */
     const handleOnBehaviorPress = async (value) => {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior(value);
@@ -260,7 +263,8 @@ export default function DeviceDetail(props) {
     }
 
     /**
-     * Get trạng thái của các nút
+     * Get trạng thái của các nút khi màn hình được hiện 
+     * STEP 5: Chú ý check lại các đường dẫn api GET và payload của chúng để phù hợp với thiết bị
      */
     const fetchStatus1 = async (token) => {
         try {

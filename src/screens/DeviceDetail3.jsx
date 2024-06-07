@@ -72,6 +72,20 @@ export default function DeviceDetail3(props) {
             }])
         }
     };
+    const [powerOnBehavior3, setPowerOnBehavior3] = useState('On');
+    const [modalPowerOnBehavior3, setModalPowerOnBehavior3] = useState(false);
+    const handleOnBehaviorPress3 = async (value) => {
+        const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior3_begin') + entityId + switchKey.get('powerOnBehavior3_end'), option: value.toLowerCase() }, nowUser.token);
+        setPowerOnBehavior3(value);
+        setModalPowerOnBehavior3(false);
+        if (recordScenario) {
+            setScenario([...scenario, {
+                url: `/api/services/select/select_option`,
+                body: { entity_id: switchKey.get('powerOnBehavior3_begin') + entityId + switchKey.get('powerOnBehavior3_end'), option: value.toLowerCase() },
+                accessToken: nowUser.token
+            }])
+        }
+    };
 
     const [switchStatus1, setSwitchStatus1] = useState(true);
     const handleChangeSwitchStatus1 = async () => {
@@ -121,7 +135,6 @@ export default function DeviceDetail3(props) {
         setSwitchStatus2(!switchStatus2);
     }
 
-    // TODO: sửa lại L3
     const [switchStatus3, setSwitchStatus3] = useState(true);
     const handleChangeSwitchStatus3 = async () => {
         if (switchStatus3) {
@@ -265,10 +278,10 @@ export default function DeviceDetail3(props) {
             }])
         }
     }
-
     const handleChangeCountdown1 = async (value) => {
         setCountdown1(parseInt(value.nativeEvent.text.trim()));
     }
+
     const [countdown2, setCountdown2] = useState(0);
     const handleCountdown2 = async (value) => {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown2_begin') + entityId + switchKey.get('countdown2_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
@@ -284,6 +297,20 @@ export default function DeviceDetail3(props) {
         setCountdown2(parseInt(value.nativeEvent.text.trim()));
     }
 
+    const [countdown3, setCountdown3] = useState(0);
+    const handleCountdown3 = async (value) => {
+        const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown3_begin') + entityId + switchKey.get('countdown3_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
+        if (recordScenario) {
+            setScenario([...scenario, {
+                url: `/api/services/number/set_value`,
+                body: { entity_id: switchKey.get('countdown3_begin') + entityId + switchKey.get('countdown3_end'), value: parseInt(value.nativeEvent.text.trim()) },
+                accessToken: nowUser.token
+            }])
+        }
+    }
+    const handleChangeCountdown3 = async (value) => {
+        setCountdown3(parseInt(value.nativeEvent.text.trim()));
+    }
     /**
      * Get trạng thái của các nút
      */
@@ -365,6 +392,15 @@ export default function DeviceDetail3(props) {
         }
     }
 
+    const fetchPowerOnBehavior3 = async (token) => {
+        try {
+            let device = await getData(`/api/states/${switchKey.get('powerOnBehavior3_begin') + entityId + switchKey.get('powerOnBehavior3_end')}`, token)
+            setPowerOnBehavior3(toUpperCaseFirtChar(device.state))
+        } catch (error) {
+            console.error('Failed to load device:', error);
+        }
+    }
+
     const fetchBrightNess = async (token) => {
         try {
             let device = await getData(`/api/states/${switchKey.get('brightness_begin') + entityId + switchKey.get('brightness_end')}`, token)
@@ -411,12 +447,13 @@ export default function DeviceDetail3(props) {
                     setNowUser(JSON.parse(user));
                     fetchStatus1(userParsed.token);
                     fetchStatus2(userParsed.token);
-                    fetchStatus3(userParsed.token);
+                    // fetchStatus3(userParsed.token);
                     fetchBlacklight(userParsed.token);
                     fetchChildLock(userParsed.token);
                     fetchPowerOnBehavior(userParsed.token);
                     fetchPowerOnBehavior1(userParsed.token);
                     fetchPowerOnBehavior2(userParsed.token);
+                    // fetchPowerOnBehavior3(userParsed.token);
                     fetchBrightNess(userParsed.token);
                     fetchOnColor(userParsed.token);
                     fetchOffColor(userParsed.token);
@@ -430,10 +467,9 @@ export default function DeviceDetail3(props) {
         };
         checkCurrentUser();
     }, []);
-
+    
     useEffect(() => {
         const intervalId = setInterval(fetchData, 500); // Gọi fetchData mỗi 0.5 giây
-
         return () => clearInterval(intervalId);
     }, [nowUser]);
     const fetchData = async () => {
@@ -571,6 +607,64 @@ export default function DeviceDetail3(props) {
         setShowDate2(true);
     };
 
+
+    const [date3, setDate3] = useState(new Date());
+    const [showDate3, setShowDate3] = useState(false);
+    const [showTime3, setShowTime3] = useState(false);
+    const [scheduleSwitchStatus3, setScheduleSwitchStatus3] = useState('');
+    const [showModalScheduleSwitchStatus3, setShowModalScheduleSwitchStatus3] = useState(false);
+
+    const handleDateSelected3 = (event, selectedDate) => {
+        if (event.type !== 'dismissed') {
+            let currentDate3 = selectedDate || date3;
+            setDate3(currentDate3);
+            setShowTime3(true);
+            console.log(selectedDate);
+        }
+        setShowDate3(false);
+    };
+
+    const handleTimeSelected3 = (event, selectedTime) => {
+        if (event.type !== 'dismissed') {
+            setShowDate3(false);
+            let currentTime3 = selectedTime || date3;
+            setDate3(new Date(
+                date3.getFullYear(),
+                date3.getMonth(),
+                date3.getDate(),
+                currentTime3.getHours(),
+                currentTime3.getMinutes()
+            ));
+            setShowModalScheduleSwitchStatus3(true)
+        }
+        setShowTime3(false);
+    };
+
+    const toggleSwitchStatus3 = (status) => {
+        setScheduleSwitchStatus3(status);
+        setShowModalScheduleSwitchStatus3(false);
+        let now = new Date();
+        let msUntilTimeout = date3.getTime() - now.getTime();
+        if (msUntilTimeout > 0) {
+            setTimeout(async () => {
+                console.log("Hết thời gian hẹn giờ L3");
+                if (status == 'On') {
+                    const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') }, nowUser.token);
+                } else if (status == 'Off') {
+                    const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') }, nowUser.token);
+                }
+            }, msUntilTimeout);
+        } else {
+            alert("Thời gian đã chọn đã qua. Vui lòng chọn một thời điểm trong tương lai.");
+        }
+    };
+    const showDatePicker3 = () => {
+        setShowDate3(true);
+    };
+
+    /**
+     * Kịch bản
+     */
     const [scenario, setScenario] = useState([]);
     const [recordScenario, setrecordScenario] = useState(false);
     useEffect(() => {
@@ -913,6 +1007,40 @@ export default function DeviceDetail3(props) {
                     </TouchableOpacity>
                     <View style={deviceCss.separator} />
 
+                    <TouchableOpacity style={deviceCss.settingRow} onPress={() => {
+                        setModalPowerOnBehavior1(true);
+                    }}>
+                        <Text style={deviceCss.label}>Power-on behavior L3</Text>
+                        <Modal
+                            // animationType="slide"
+                            transparent={true}
+                            visible={modalPowerOnBehavior3}
+                            onRequestClose={() => setModalPowerOnBehavior3(false)}
+                        >
+                            <View style={deviceCss.modalContainer}>
+                                <View style={deviceCss.modalView}>
+                                    <Text style={deviceCss.modalText}>Select Power-on behavior L3</Text>
+                                    <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                        <TouchableOpacity style={deviceCss.button} onPress={() => handleOnBehaviorPress3('On')}>
+                                            <Text style={deviceCss.buttonText}>On</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={deviceCss.button} onPress={() => handleOnBehaviorPress3('Off')}>
+                                            <Text style={deviceCss.buttonText}>Off</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={deviceCss.button} onPress={() => handleOnBehaviorPress3('Previous')}>
+                                            <Text style={deviceCss.buttonText}>Previous</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={deviceCss.button} onPress={() => setModalPowerOnBehavior3(false)}>
+                                            <Text style={deviceCss.buttonText}>Cancel</Text>
+                                        </TouchableOpacity>
+                                    </ScrollView>
+                                </View>
+                            </View>
+                        </Modal>
+                        <Text style={deviceCss.value}>{powerOnBehavior3}</Text>
+                    </TouchableOpacity>
+                    <View style={deviceCss.separator} />
+
                     <View style={deviceCss.switchRow}>
                         <Text style={deviceCss.label}>Contdown L1 (s)</Text>
                         <TextInput
@@ -932,6 +1060,19 @@ export default function DeviceDetail3(props) {
                             value={countdown2}
                             onSubmitEditing={handleCountdown2}
                             onChange={handleChangeCountdown2}
+                            style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5 }}
+                            keyboardType="numeric"
+                            inputMode="numeric"
+                        />
+                    </View>
+                    <View style={deviceCss.separator} />
+
+                    <View style={deviceCss.switchRow}>
+                        <Text style={deviceCss.label}>Contdown L3 (s)</Text>
+                        <TextInput
+                            value={countdown3}
+                            onSubmitEditing={handleCountdown3}
+                            onChange={handleChangeCountdown3}
                             style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5 }}
                             keyboardType="numeric"
                             inputMode="numeric"
@@ -973,7 +1114,7 @@ export default function DeviceDetail3(props) {
                         >
                             <View style={deviceCss.modalContainer}>
                                 <View style={deviceCss.modalView}>
-                                    <Text style={deviceCss.modalText}>Select Power-on behavior</Text>
+                                    <Text style={deviceCss.modalText}>Select Action</Text>
                                     <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
                                         <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus1('On')}>
                                             <Text style={deviceCss.buttonText}>On</Text>
@@ -1023,7 +1164,7 @@ export default function DeviceDetail3(props) {
                     >
                         <View style={deviceCss.modalContainer}>
                             <View style={deviceCss.modalView}>
-                                <Text style={deviceCss.modalText}>Select Power-on behavior</Text>
+                                <Text style={deviceCss.modalText}>Select Action</Text>
                                 <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
                                     <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus2('On')}>
                                         <Text style={deviceCss.buttonText}>On</Text>
@@ -1037,6 +1178,53 @@ export default function DeviceDetail3(props) {
                     </Modal>
                     <View style={deviceCss.separator} />
 
+                    <TouchableOpacity style={deviceCss.switchRow} onPress={showDatePicker3}>
+                        <Text style={deviceCss.label}>Schedule L3</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={[deviceCss.label, { marginRight: 5 }]}>{scheduleSwitchStatus3 === 'On' ? 'Bật lúc' : (scheduleSwitchStatus3 === 'Off' ? 'Tắt lúc' : 'No')}</Text>
+                            <Text style={deviceCss.label}>{scheduleSwitchStatus3 === 'On' || scheduleSwitchStatus3 === 'Off' ? date3.toLocaleString() : ''}</Text>
+                        </View>
+                        {(showDate3 && (
+                            <DateTimePicker
+                                value={date3}
+                                mode="date"
+                                display="default"
+                                onChange={handleDateSelected3}
+                                maximumDate={new Date(2300, 10, 20)}
+                                minimumDate={new Date(1950, 0, 1)}
+                            />
+                        ))
+                            ||
+                            (showTime3 && (
+                                <DateTimePicker
+                                    value={date3}
+                                    mode="time"
+                                    display="default"
+                                    onChange={handleTimeSelected3}
+                                />
+                            ))}
+                    </TouchableOpacity>
+                    <Modal
+                        // animationType="slide"
+                        transparent={true}
+                        visible={showModalScheduleSwitchStatus3}
+                        onRequestClose={() => setShowModalScheduleSwitchStatus3(false)}
+                    >
+                        <View style={deviceCss.modalContainer}>
+                            <View style={deviceCss.modalView}>
+                                <Text style={deviceCss.modalText}>Select Action</Text>
+                                <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                    <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus3('On')}>
+                                        <Text style={deviceCss.buttonText}>On</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={deviceCss.button} onPress={() => toggleSwitchStatus3('Off')}>
+                                        <Text style={deviceCss.buttonText}>Off</Text>
+                                    </TouchableOpacity>
+                                </ScrollView>
+                            </View>
+                        </View>
+                    </Modal>
+                    <View style={deviceCss.separator} />
                     {/* <View style={deviceCss.switchRow}>
                         <TouchableOpacity
                             style={deviceCss.buttonScenario}

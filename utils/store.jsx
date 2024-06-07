@@ -13,6 +13,9 @@ const useStore = create((set, get) => ({
 
   toggleSmartPage: true,
   setToggleSmartPage: () => set({ toggleSmartPage: !get().toggleSmartPage }),
+  
+  entityName: null,
+  setEntityName: name => set({ entityName: name }),
 }));
 
 export default useStore;

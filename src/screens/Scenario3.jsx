@@ -25,12 +25,24 @@ import { getData, postData } from "../../utils/commonRequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function Scenario3() {
+export default function Scenario() {
     const navigation = useNavigation();
     const { navigate, goBack } = navigation;
     // Chi tiết kịch bản hiện tại
     const [scenarios, setScenarios] = useState([]);
-    const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId, scenarioId, setScenarioId, toggleSmartPage, setToggleSmartPage } = useStore();
+    const {
+        currentUser,
+        setCurrentUser,
+        removeCurrentUser,
+        entityId,
+        setEntityId,
+        scenarioId,
+        setScenarioId,
+        toggleSmartPage,
+        setToggleSmartPage,
+        entityName,
+        setEntityName
+    } = useStore();
     const fetchScenariosIfRunMode = async () => {
         try {
             const dataRes = await getDataBackend(`/api/scenarios/${scenarioId}`, currentUser.tokenBackend);
@@ -106,6 +118,12 @@ export default function Scenario3() {
         //     }])
         // }
     };
+    const [powerOnBehavior3, setPowerOnBehavior3] = useState('On');
+    const [modalPowerOnBehavior3, setModalPowerOnBehavior3] = useState(false);
+    const handleOnBehaviorPress3 = async (value) => {
+        setPowerOnBehavior3(value);
+        setModalPowerOnBehavior3(false);
+    };
 
     const [switchStatus1, setSwitchStatus1] = useState(true);
     const handleChangeSwitchStatus1 = async () => {
@@ -153,6 +171,11 @@ export default function Scenario3() {
             // }
         }
         setSwitchStatus2(!switchStatus2);
+    }
+
+    const [switchStatus3, setSwitchStatus3] = useState(true);
+    const handleChangeSwitchStatus3 = () => {
+        setSwitchStatus3(!switchStatus3);
     }
 
     const [indicatorMode, setIndicatorMode] = useState('None');
@@ -203,7 +226,7 @@ export default function Scenario3() {
     const [offColor, setOffColor] = useState("");
     const [modalOffColor, setModalOffColor] = useState(false);
     const handleOffColorPress = async (value) => {
-        const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value }, nowUser.token);
+        // const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value }, nowUser.token);
         setOffColor(value);
         setModalOffColor(false);
         // if (recordScenario) {
@@ -426,6 +449,14 @@ export default function Scenario3() {
             console.error('Failed to load device:', error);
         }
     };
+    const fetchStatus3 = async (token) => {
+        try {
+            let device = await getData(`/api/states/${switchKey.get('state3_begin') + entityId + switchKey.get('state3_end')}`, token)
+            setSwitchStatus3(device.state === 'on' ? true : false)
+        } catch (error) {
+            console.error('Failed to load device:', error);
+        }
+    };
 
     const fetchBlacklight = async (token) => {
         try {
@@ -514,6 +545,7 @@ export default function Scenario3() {
                     let userParsed = JSON.parse(user);
                     fetchStatus1(userParsed.token);
                     fetchStatus2(userParsed.token);
+                    fetchStatus3(userParsed.token);
                     fetchBlacklight(userParsed.token);
                     fetchChildLock(userParsed.token);
                     fetchPowerOnBehavior(userParsed.token);
@@ -554,14 +586,14 @@ export default function Scenario3() {
                 var newScenario = [];
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: powerOnBehavior },
+                    body: { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: powerOnBehavior.toLowerCase() },
                 })
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: indicatorMode },
+                    body: { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: indicatorMode.toLowerCase() },
                 })
                 newScenario.push({
-                    url: `/api/services/switch/turn_${(backlightMode) ? 'on': 'off'}`,
+                    url: `/api/services/switch/turn_${(backlightMode) ? 'on' : 'off'}`,
                     body: { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') },
                 })
                 newScenario.push({
@@ -581,26 +613,34 @@ export default function Scenario3() {
                     body: { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: offColor },
                 })
                 newScenario.push({
-                    url: `/api/services/switch/turn_${switchStatus1 ? 'on': 'off'}`,
+                    url: `/api/services/switch/turn_${switchStatus1 ? 'on' : 'off'}`,
                     body: { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') },
                 })
                 newScenario.push({
-                    url: `/api/services/switch/turn_${switchStatus2 ? 'on': 'off'}`,
+                    url: `/api/services/switch/turn_${switchStatus2 ? 'on' : 'off'}`,
                     body: { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') },
                 })
                 newScenario.push({
-                    url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: powerOnBehavior1 },
+                    url: `/api/services/switch/turn_${switchStatus3 ? 'on' : 'off'}`,
+                    body: { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') },
                 })
                 newScenario.push({
                     url: `/api/services/select/select_option`,
-                    body: { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: powerOnBehavior2 },
+                    body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: powerOnBehavior1.toLowerCase() },
+                })
+                newScenario.push({
+                    url: `/api/services/select/select_option`,
+                    body: { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: powerOnBehavior2.toLowerCase() },
+                })
+                newScenario.push({
+                    url: `/api/services/select/select_option`,
+                    body: { entity_id: switchKey.get('powerOnBehavior3_begin') + entityId + switchKey.get('powerOnBehavior3_end'), option: powerOnBehavior3.toLowerCase() },
                 })
                 try {
                     let postNewScenario = {
                         userId: currentUser.customUserDetails.id + '',
                         name: scenarioName,
-                        entityId: entityId
+                        entityId: entityName
                     };
                     const res1 = await postDataBackend('/api/scenarios/create', postNewScenario, currentUser.tokenBackend);
                     console.log(postNewScenario);
@@ -847,6 +887,17 @@ export default function Scenario3() {
                     </View>
                     <View style={scenarioCss.separator} />
 
+                    <View style={scenarioCss.switchRow}>
+                        <Text style={scenarioCss.label}>Status L3</Text>
+                        <Switch
+                            value={switchStatus3}
+                            onValueChange={handleChangeSwitchStatus3}
+                            style={{ height: 20 }}
+                            disabled={scenarioId != null}
+                        />
+                    </View>
+                    <View style={scenarioCss.separator} />
+
                     <TouchableOpacity style={scenarioCss.settingRow} onPress={() => {
                         if (scenarioId == null)
                             setModalPowerOnBehavior1(true);
@@ -917,6 +968,41 @@ export default function Scenario3() {
                     </TouchableOpacity>
                     <View style={scenarioCss.separator} />
 
+                    <TouchableOpacity style={scenarioCss.settingRow} onPress={() => {
+                        if (scenarioId == null)
+                            setModalPowerOnBehavior3(true);
+                    }}>
+                        <Text style={scenarioCss.label}>Power-on behavior L3</Text>
+                        <Modal
+                            // animationType="slide"
+                            transparent={true}
+                            visible={modalPowerOnBehavior3}
+                            onRequestClose={() => setModalPowerOnBehavior3(false)}
+                        >
+                            <View style={scenarioCss.modalContainer}>
+                                <View style={scenarioCss.modalView}>
+                                    <Text style={scenarioCss.modalText}>Select Power-on behavior L3</Text>
+                                    <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                        <TouchableOpacity style={scenarioCss.button} onPress={() => handleOnBehaviorPress3('On')}>
+                                            <Text style={scenarioCss.buttonText}>On</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={scenarioCss.button} onPress={() => handleOnBehaviorPress3('Off')}>
+                                            <Text style={scenarioCss.buttonText}>Off</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={scenarioCss.button} onPress={() => handleOnBehaviorPress3('Previous')}>
+                                            <Text style={scenarioCss.buttonText}>Previous</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={scenarioCss.button} onPress={() => setModalPowerOnBehavior3(false)}>
+                                            <Text style={scenarioCss.buttonText}>Cancel</Text>
+                                        </TouchableOpacity>
+                                    </ScrollView>
+                                </View>
+                            </View>
+                        </Modal>
+                        <Text style={scenarioCss.value}>{powerOnBehavior3}</Text>
+                    </TouchableOpacity>
+                    <View style={scenarioCss.separator} />
+                    
                     {scenarioId == null &&
                         <View style={scenarioCss.switchCol}>
                             <Text style={scenarioCss.label}>Tên kịch bản</Text>
@@ -924,7 +1010,7 @@ export default function Scenario3() {
                             <TextInput
                                 value={scenarioName}
                                 onChangeText={handleScenarioName}
-                                style={{ borderColor: 'gray', borderWidth: 1, width: '90%', height: 40, marginBottom: -10, marginTop: 8 }}
+                                style={{ borderColor: 'gray', borderWidth: 1, width: '100%', height: 40, marginBottom: -10, marginTop: 8, borderRadius: 8, paddingLeft: 10 }}
                             />
                         </View>
                     }

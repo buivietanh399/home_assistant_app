@@ -39,10 +39,10 @@ export default function Login() {
                 rememberMe: true,
             }
             const loginResponse = await postDataBackend('/api/authenticate', reqBody, '');
-            console.log(loginResponse);
+            // console.log(loginResponse);
             if (loginResponse) {
-                console.log('token: ' + loginResponse.httpHeaders.Authorization[0]);
-                console.log('user: ' + loginResponse.customUserDetails);
+                // console.log('token: ' + loginResponse.httpHeaders.Authorization[0]);
+                // console.log('user: ' + loginResponse.customUserDetails);
                 let loginUser = {
                     tokenBackend: loginResponse.httpHeaders.Authorization[0],
                     customUserDetails: loginResponse.customUserDetails,

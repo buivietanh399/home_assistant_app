@@ -4,6 +4,11 @@ export const scenarioKey = 'scenario';
 
 export const oneHundredElement = Array.from({ length: 101 }, (_, index) => index);
 
+// STEP 0: Khai báo thêm các key mới cho id. ví dụ id tổng là '0x8c65a3fffe529570_2gang' 
+// thì id của on off công tắc sẽ là: 
+//                      'switch.' + '0x8c65a3fffe529570_2gang' + '_l2'
+//                          ⭡                    ⭡                 ⭡
+// tương đương:        state2_begin          id tổng           state2_end
 export const switchKey = new Map([
     ['state1_begin', 'switch.'],
     ['state1_end', '_l1'],

@@ -22,7 +22,19 @@ export default function Smart() {
     const navigation = useNavigation();
     const { navigate, goBack } = navigation;
     const [allScenarios, setAllScenarios] = useState([]);
-    const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId, scenarioId, setScenarioId, toggleSmartPage, setToggleSmartPage } = useStore();
+    const {
+        currentUser,
+        setCurrentUser,
+        removeCurrentUser,
+        entityId,
+        setEntityId,
+        scenarioId,
+        setScenarioId,
+        toggleSmartPage,
+        setToggleSmartPage,
+        entityName,
+        setEntityName
+    } = useStore();
     const fetchAllScenarios = async () => {
         const dataRes = await getDataBackend('/api/scenarios', currentUser.tokenBackend);
         const filteredScenarios = dataRes.filter((element) => {
@@ -42,12 +54,12 @@ export default function Smart() {
             setShowRunModal(false)
             const dataRes = await getDataBackend(`/api/scenarios/${scenarioId}`, currentUser.tokenBackend);
             const newScenarios = dataRes.action.map(element => JSON.parse(element.payload));
-            let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            // let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
             for (let value of newScenarios) {
-                if (value.body.entity_id.includes('switch')) {
-                    const result = await postData(value.url, value.body, currentUser.token);
-                    // await delay(500); // Dừng lại 1 giây
-                }
+                // if (value.body.entity_id.includes('switch')) {
+                const result = await postData(value.url, value.body, currentUser.token);
+                // await delay(500); // Dừng lại 0.5 giây
+                // }
             }
             alert('Chạy kịch bản thành công!')
         } catch (e) {
@@ -97,16 +109,16 @@ export default function Smart() {
                             if (item.entity_id.split('.')[1].slice(0, 2) == '0x') {
                                 const name = item.attributes.friendly_name.split('-')[0];
                                 if (existingName.length === 0) {
-                                    console.log("====" + name);
+                                    // console.log("====" + name);
                                     existingName.push(name)
                                     filteredData.push(item);
                                 } else {
                                     let existingGroup = existingName.find(groupName => groupName === name);
                                     if (existingGroup) {
-                                        console.log("====" + name);
+                                        // console.log("====" + name);
                                         // existingGroup.devices.push(item);
                                     } else {
-                                        console.log("====" + name);
+                                        // console.log("====" + name);
                                         existingName.push(name)
                                         filteredData.push(item);
                                     }
@@ -134,9 +146,20 @@ export default function Smart() {
                                                 key={index}
                                                 onPress={() => {
                                                     setScenarioId(null);
-                                                    setEntityId(item.entity_id.split('.')[1].split('_')[0] + '_' + item.entity_id.split('.')[1].split('_')[1])
+                                                    let entityId = item.entity_id.split('.')[1].split('_')[0] + '_' + item.entity_id.split('.')[1].split('_')[1];
+                                                    setEntityId(entityId)
+                                                    setEntityName(item.attributes.friendly_name.split('-')[0] ? item.attributes.friendly_name.split('-')[0] : null)
                                                     setShowModal(false)
-                                                    navigate('Scenario')
+                                                    // STEP 3: check điều kiện của id để chuyển màn hình
+                                                    if (entityId.split('_')[1] == '2gang') {
+                                                        console.log('2 công tắc');
+                                                        navigate('Scenario');
+                                                    } else if (entityId.split('_')[1] == '3gang') {
+                                                        console.log('3 công tắc');
+                                                        navigate('Scenario3');
+                                                    } else {
+                                                        alert("Thiết bị không hợp lệ!");
+                                                    }
                                                 }}
                                             >
                                                 <Text style={smartCss.modalButtonText}>{item.attributes.friendly_name.split('-')[0]}</Text>
