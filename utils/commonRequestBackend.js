@@ -1,6 +1,6 @@
 // Hàm gọi API sử dụng phương thức GET
 
-const BASE_URL_BACKEND = 'http://192.168.0.2:8080'
+const BASE_URL_BACKEND = 'http://192.168.1.3:8080'
 
 export async function getDataBackend(url, accessToken) {
     try {

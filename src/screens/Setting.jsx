@@ -21,6 +21,7 @@ import useStore from "../../utils/store";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { device } from "../../utils/device";
 import { MaterialIcons } from '@expo/vector-icons';
+import { postDataBackend } from "../../utils/commonRequestBackend";
 
 export default function Setting() {
     //navigation
@@ -52,10 +53,20 @@ export default function Setting() {
             alert('Mật khẩu mới không được trùng với mật khẩu cũ');
             return;
         }
+        let reqBody = {
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        }
         // Call API to change password
-        // const response = await postData('/api/change-password', { currentPassword, newPassword }, currentUser.token);
-        setModalChangePassword(false);
-    
+        try {
+            await postDataBackend('/api/account/change-password', reqBody, currentUser.tokenBackend);
+            alert('Đổi mật khẩu thành công');
+            setModalChangePassword(false);
+        } catch (error) {
+            console.error(error);
+            alert('Mật khẩu cũ không đúng hoặc có lỗi xảy ra trong quá trình đổi mật khẩu, vui lòng thử lại.');
+        }
+
     }
     useEffect(() => {
         const checkCurrentUser = async () => {
@@ -130,7 +141,7 @@ export default function Setting() {
                                     secureTextEntry={true}
                                     value={currentPassword}
                                     onChangeText={setCurrentPassword}
-                                    style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5 }}
+                                    style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5, height: 40 }}
                                 />
                             </View>
                             <View style={settingCss.inputContainer}>
@@ -140,7 +151,7 @@ export default function Setting() {
                                     value={newPassword}
                                     // onSubmitEditing={handleCountdown1}
                                     onChangeText={setNewPassword}
-                                    style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5 }}
+                                    style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5, height: 40 }}
                                 />
                             </View>
                             <View style={settingCss.inputContainer}>
@@ -150,7 +161,7 @@ export default function Setting() {
                                     value={confirmPassword}
                                     // onSubmitEditing={handleCountdown1}
                                     onChangeText={setConirmPassword}
-                                    style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5 }}
+                                    style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5, height: 40 }}
                                 />
                             </View>
                             <View style={settingCss.footerModal}>
@@ -229,7 +240,7 @@ const settingCss = StyleSheet.create({
     },
     button: {
         color: colors.black,
-        fontWeight: "bold",
+        fontWeight: "500",
         fontSize: 17,
         alignItems: "center",
         justifyContent: "center",
@@ -253,7 +264,8 @@ const settingCss = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        maxHeight: '80%'
+        maxHeight: '80%',
+        marginBottom: 120,
     },
     modalText: {
         fontSize: 18,

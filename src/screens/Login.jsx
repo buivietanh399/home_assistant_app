@@ -9,6 +9,7 @@ import {
     ScrollView,
     Dimensions,
     TextInput,
+    Modal,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { userKey } from "../constants/common";
@@ -19,6 +20,8 @@ import Entypo from '@expo/vector-icons/Entypo';
 import useStore from "../../utils/store";
 import { postData } from "../../utils/commonRequest";
 import { postDataBackend } from "../../utils/commonRequestBackend";
+import { MaterialIcons } from '@expo/vector-icons';
+import { device } from "../../utils/device";
 
 export default function Login() {
     //navigation
@@ -29,6 +32,8 @@ export default function Login() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setInLoading] = useState(false);
+    const [login, setLogin] = useState("");
+    const [modalForgotPassword, setModalForgotPassword] = useState(false);
 
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0M2QwZDhmZTQzZGY0MWY4Yjc1NjhmZTgwNmUxOTQ3YiIsImlhdCI6MTcxNjQ3Nzg5OCwiZXhwIjoyMDMxODM3ODk4fQ.-5RvB-i1_YOutT0N9SGqX_AXl7N2FBEueFLmtWsJN3c';
     const handleLogin = async () => {
@@ -75,6 +80,21 @@ export default function Login() {
     useEffect(() => {
         fetchUser();
     })
+
+    const handleForgotPassword = async () => {
+        try {
+            const response = await postDataBackend(`/api/users/reset-password/${login}`, null, '');
+            if (response) {
+                alert('Mật khẩu đã được khôi phục về mật khẩu mặt định là 123456aA@. Vui lòng đăng nhập và đổi lại mật khẩu');
+                setModalForgotPassword(false);
+                setLogin('');
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Có lỗi xảy ra. Vui lòng thử lại sau!")
+        }
+    }
+
     return (
         <SafeAreaView style={[styles.customSafeArea, { backgroundColor: colors.white }]}>
             <View style={styles.container}>
@@ -124,6 +144,45 @@ export default function Login() {
                         <Entypo name="login" size={25} color={colors.white} />
                         <Text style={loginCss.loginButtonlogin}>Đăng nhập</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        style={loginCss.forgotPasswordButton}
+                        onPress={() => {
+                            setModalForgotPassword(true);
+                        }}
+                    >
+                        <MaterialIcons name="password" size={24} color={colors.primary} />
+                        <Text style={loginCss.forgotPasswordButtonText}>Quên mật khẩu</Text>
+                    </TouchableOpacity>
+                    <Modal
+                        // animationType="slide"
+                        transparent={true}
+                        visible={modalForgotPassword}
+                        onRequestClose={() => setModalForgotPassword(false)}
+                    >
+                        <View style={loginCss.modalContainer}>
+                            <View style={loginCss.modalView}>
+                                <Text style={loginCss.modalText}>Quên mật khẩu</Text>
+                                <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                    <View style={loginCss.inputContainer}>
+                                        <Text style={loginCss.inputLabel}>Tên đăng nhập</Text>
+                                        <TextInput
+                                            value={login}
+                                            onChangeText={setLogin}
+                                            style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5, height: 40 }}
+                                        />
+                                    </View>
+                                    <View style={loginCss.footerModal}>
+                                        <TouchableOpacity style={loginCss.buttonModal} onPress={() => handleForgotPassword()}>
+                                            <Text style={loginCss.buttonTextModal}>XÁC NHẬN</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={loginCss.buttonModal} onPress={() =>setModalForgotPassword(false)}>
+                                            <Text style={loginCss.buttonTextModal}>HỦY BỎ</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </ScrollView>
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             </View>
         </SafeAreaView>
@@ -226,6 +285,27 @@ const loginCss = StyleSheet.create({
         marginLeft: 10
     },
 
+    forgotPasswordButton: {
+        width: "100%",
+        height: 55,
+        borderRadius: 25,
+        borderWidth: 2,
+        borderColor: colors.primary,
+        // backgroundColor: colors.primary,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 32,
+        flexDirection: "row",
+    },
+    forgotPasswordButtonText: {
+        color: colors.primary,
+        fontWeight: "bold",
+        fontSize: 17,
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft: 10
+    },
+
     loginButtonViewGoogle: {
         width: "100%",
         height: 55,
@@ -260,5 +340,55 @@ const loginCss = StyleSheet.create({
         color: colors.primary,
         fontWeight: "bold",
         fontSize: 17,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalView: {
+        width: device.width * 0.8,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingTop: 20,
+        paddingBottom: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        maxHeight: '80%',
+        marginBottom: 200
+    },
+    modalText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    inputContainer: {
+        width: '90%',
+        marginTop: 16,
+    },
+    inputLabel: {
+        fontSize: 16,
+        marginBottom: 5
+    },
+    footerModal: {
+        flexDirection: 'row',
+    },
+    buttonTextModal: {
+        marginTop: 16,
+        color: colors.primary,
+        fontSize: 16,
+    },
+    buttonModal: {
+        color: colors.black,
+        fontWeight: "bold",
+        fontSize: 17,
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft: 10,
+        flex: 1,
     },
 });
