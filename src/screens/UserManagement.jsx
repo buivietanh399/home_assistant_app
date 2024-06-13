@@ -95,7 +95,7 @@ export default function UserManagement() {
             }
             const response = await postDataBackend('/api/users', reqBody, currentUser.tokenBackend);
             if (response) {
-                alert("Tạo người dùng thành công!");
+                alert("Tạo người dùng thành công, mật khẩu mặc định là 123456aA@");
                 setModalNewUser(false);
                 setFirstName('');
                 setLastName('');
