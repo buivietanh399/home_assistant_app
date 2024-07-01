@@ -42,11 +42,6 @@ export default function UIScreen() {
             <Tab.Screen
                 name="Home"
                 component={Home}
-                // options={{
-                //     title: currentLanguage == 'vi' ? 'Trang chủ' : 'Home',
-                //     tabBarActiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
-                //     tabBarInactiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
-                // }}
                 options={{
                     title: 'Trang chủ',
                     tabBarActiveBackgroundColor: colors.white,
@@ -56,11 +51,6 @@ export default function UIScreen() {
             <Tab.Screen
                 name="Smart"
                 component={Smart}
-                // options={{
-                //     tabBarLabel: currentLanguage == 'vi' ? 'Thư viện' : 'Library',
-                //     tabBarActiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
-                //     tabBarInactiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
-                // }}
                 options={{
                     tabBarLabel: 'Thông minh',
                     tabBarActiveBackgroundColor: colors.white,
@@ -69,11 +59,6 @@ export default function UIScreen() {
             />
             <Tab.Screen
                 name="Setting"
-                // component={Setting} options={{
-                //     tabBarLabel: currentLanguage == 'vi' ? 'Cài đặt' : 'Setting',
-                //     tabBarActiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
-                //     tabBarInactiveBackgroundColor: isDarkTheme ? colors.black : colors.white,
-                // }} />
                 component={Setting} options={{
                     tabBarLabel: 'Cài đặt',
                     tabBarActiveBackgroundColor: colors.white,

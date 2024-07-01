@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
     SafeAreaView,
     Text,
@@ -9,6 +9,7 @@ import {
     ScrollView,
     Dimensions,
     Image,
+    RefreshControl,
 } from "react-native";
 import Colors from "../constants/colors";
 import { styles } from "../components/GlobalStyles";
@@ -28,59 +29,73 @@ export default function Home() {
      */
     const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [devices, setDevices] = useState([]);
-    useEffect(() => {
-        const checkCurrentUser = async () => {
-            try {
-                const user = await AsyncStorage.getItem(userKey);
-                if (user !== null) {
-                    var parsedUser = JSON.parse(user);
-                    setCurrentUser(JSON.parse(user));
-                    const allDevices = await getData('/api/states', parsedUser.token);
-                    var existingName = []
-                    var filteredData = []
-                    allDevices.forEach(item => {
-                        if (item.entity_id) {
-                            // console.log("item.entity_id = ", item.entity_id);
-                            if (item.entity_id.split('.')[1].slice(0, 2) == '0x') {
-                                const name = item.attributes.friendly_name.split('-')[0];
-                                if (existingName.length === 0) {
+
+    const checkCurrentUser = async () => {
+        try {
+            const user = await AsyncStorage.getItem(userKey);
+            if (user !== null) {
+                var parsedUser = JSON.parse(user);
+                setCurrentUser(JSON.parse(user));
+                const allDevices = await getData('/api/states', parsedUser.token);
+                var existingName = []
+                var filteredData = []
+                allDevices.forEach(item => {
+                    if (item.entity_id) {
+                        // console.log("item.entity_id = ", item.entity_id);
+                        if ( item.entity_id.split('.')[1] == "zigbee2mqtt_bridgespecial_permit_join_official" 
+                                || item.entity_id.split('.')[1].slice(0, 2) == '0x') {
+                            const name = item.attributes.friendly_name.split('-')[0];
+                            if (existingName.length === 0) {
+                                // console.log("====" + name);
+                                existingName.push(name)
+                                filteredData.push(item);
+                            } else {
+                                let existingGroup = existingName.find(groupName => groupName === name);
+                                if (existingGroup) {
+                                    // console.log("====" + name);
+                                    // existingGroup.devices.push(item);
+                                } else {
                                     // console.log("====" + name);
                                     existingName.push(name)
                                     filteredData.push(item);
-                                } else {
-                                    let existingGroup = existingName.find(groupName => groupName === name);
-                                    if (existingGroup) {
-                                        // console.log("====" + name);
-                                        // existingGroup.devices.push(item);
-                                    } else {
-                                        // console.log("====" + name);
-                                        existingName.push(name)
-                                        filteredData.push(item);
-                                    }
                                 }
                             }
                         }
-                    });
-                    setDevices(filteredData);
-                } else {
-                    replace('Login');
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false);
+                    }
+                });
+                setDevices(filteredData);
+            } else {
+                replace('Login');
             }
-        };
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+            setRefreshing(false);
+        }
+    };
+
+    useEffect(() => {
         checkCurrentUser();
     }, []);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        checkCurrentUser();
+    }, []);
+
     /**
-     * STEP 2: check điều kiện của id để chuyển màn hình
      */
     const handleDetail = (entityId) => {
         console.log(entityId);
         setEntityId(entityId);
-        if (entityId.split('_')[1] == '2gang') {
+        if (entityId == "zigbee2mqtt_bridgespecial")
+            navigate('PermitJoin');
+        else if (entityId.split('_')[1] == 'doorsensor')
+            navigate('DoorSensor');
+        else if (entityId.split('_')[1] == '2gang') {
             console.log('2 công tắc');
             navigate('DeviceDetail');
         } else if (entityId.split('_')[1] == '3gang') {
@@ -90,9 +105,15 @@ export default function Home() {
             alert("Thiết bị không hợp lệ!");
         }
     }
+
     return (
         <SafeAreaView style={[styles.customSafeArea]}>
-            <ScrollView style={styles.container}>
+            <ScrollView 
+                style={styles.container}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
                 <Text style={styles.headerText}>Tất cả thiết bị</Text>
                 <View style={homeCss.container}>
                     {devices.map((item, index) => {
@@ -158,4 +179,4 @@ const homeCss = StyleSheet.create({
     itemIconTextSmall: {
         fontSize: 14,
     }
-})
+});

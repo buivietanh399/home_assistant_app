@@ -35,7 +35,8 @@ export default function Login() {
     const [login, setLogin] = useState("");
     const [modalForgotPassword, setModalForgotPassword] = useState(false);
 
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0M2QwZDhmZTQzZGY0MWY4Yjc1NjhmZTgwNmUxOTQ3YiIsImlhdCI6MTcxNjQ3Nzg5OCwiZXhwIjoyMDMxODM3ODk4fQ.-5RvB-i1_YOutT0N9SGqX_AXl7N2FBEueFLmtWsJN3c';
+    // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0M2QwZDhmZTQzZGY0MWY4Yjc1NjhmZTgwNmUxOTQ3YiIsImlhdCI6MTcxNjQ3Nzg5OCwiZXhwIjoyMDMxODM3ODk4fQ.-5RvB-i1_YOutT0N9SGqX_AXl7N2FBEueFLmtWsJN3c';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwYjI3YTRiZTc2YWM0YTkyOTM0ZWU5Nzg0ZTY0ZTdhNiIsImlhdCI6MTcxNzU3NDgwMywiZXhwIjoyMDMyOTM0ODAzfQ.5Lbw_AHq8BnfTzkSs8klK-hkMcfpqHKymA3NaJdTCuU';  // token của javis hc mới
     const handleLogin = async () => {
         try {
             const reqBody = {

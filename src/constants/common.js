@@ -4,12 +4,9 @@ export const scenarioKey = 'scenario';
 
 export const oneHundredElement = Array.from({ length: 101 }, (_, index) => index);
 
-// STEP 0: Khai báo thêm các key mới cho id. ví dụ id tổng là '0x8c65a3fffe529570_2gang' 
-// thì id của on off công tắc sẽ là: 
-//                      'switch.' + '0x8c65a3fffe529570_2gang' + '_l2'
-//                          ⭡                    ⭡                 ⭡
-// tương đương:        state2_begin          id tổng           state2_end
 export const switchKey = new Map([
+    ['permitJoin_begin', 'switch.'],
+    ['permitJoin_end', 'zigbee2mqtt_bridgespecial_permit_join_official'],
     ['state1_begin', 'switch.'],
     ['state1_end', '_l1'],
     ['state2_begin', 'switch.'],
@@ -42,4 +39,13 @@ export const switchKey = new Map([
     ['countdown2_end', '_countdown_l2'],
     ['countdown3_begin', 'number.'],
     ['countdown3_end', '_countdown_l3'],
-])
+]);
+
+export const switchKey_doorSensor = new Map([
+    ['contact_begin', 'binary_sensor.'],
+    ['contact_end', '_contact'],
+    ['batteryLow_begin', 'binary_sensor.'],
+    ['batteryLow_end', '_battery_low'],
+    ['battery_begin', 'sensor.'],
+    ['battery_end', '_battery'],
+]);

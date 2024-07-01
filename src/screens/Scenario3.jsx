@@ -61,11 +61,11 @@ export default function Scenario() {
     const [scenario, setScenario] = useState([]);
     const runScenario = async () => {
         try {
-            let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            // let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
             for (let value of scenarios) {
                 if (value.body.entity_id.includes('switch')) {
                     const result = await postData(value.url, value.body, currentUser.token);
-                    await delay(1000); // Dừng lại 1 giây
+                    // await delay(1000); // Dừng lại 1 giây
                 }
             }
             alert('Chạy kịch bản thành công!')
@@ -1029,23 +1029,6 @@ export default function Scenario() {
                         return <Text key={index}>{e.url}</Text>
                     })}
 
-                    {/* <View style={scenarioCss.switchRow}>
-                        <TouchableOpacity
-                            style={[recordScenario ? scenarioCss.buttonScenarioRecord : (isRunScenario ? scenarioCss.buttonScenarioDisable : scenarioCss.buttonScenario), { marginRight: 8 }]}
-                            onPress={handlePlayOrSetScenario}
-                            disabled={isRunScenario}
-                        >
-                            <Text style={[scenarioCss.buttonText, { color: colors.white }]}>{(scenario.length > 0 && !recordScenario) ? 'Chạy kịch bản' : (scenario.length == 0 && !recordScenario ? 'Ghi lại kịch bản' : ('Dừng ghi'))}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[(scenario.length > 0 && !recordScenario && !isRunScenario) ? scenarioCss.buttonScenario : scenarioCss.buttonScenarioDisable, { marginLeft: 8 }]}
-                            disabled={scenario.length == 0 || isRunScenario}
-                            onPress={handleDeleteScenario}
-                        >
-                            <Text style={[scenarioCss.buttonText, { color: colors.white }]}>Xóa kịch bản</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={scenarioCss.separator} /> */}
                 </View>
             </ScrollView>
         </SafeAreaView>

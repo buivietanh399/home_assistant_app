@@ -21,3 +21,13 @@ export const switchColor = [
     'Warm White',
     'Warm Yellow'
 ]
+
+export const switchColor_3gang = [
+    'Red',
+    'Blue',
+    'Green',
+    'White',
+    'Yellow',
+    'Magenta',
+    'Cyan',
+]

@@ -61,7 +61,7 @@ export default function Smart() {
                 // await delay(500); // Dừng lại 0.5 giây
                 // }
             }
-            alert('Chạy kịch bản thành công!')
+            alert('Chạy kịch bản thành công')
         } catch (e) {
             console.error(e);
             alert("Chạy kịch bản thất bại")
@@ -150,7 +150,6 @@ export default function Smart() {
                                                     setEntityId(entityId)
                                                     setEntityName(item.attributes.friendly_name.split('-')[0] ? item.attributes.friendly_name.split('-')[0] : null)
                                                     setShowModal(false)
-                                                    // STEP 3: check điều kiện của id để chuyển màn hình
                                                     if (entityId.split('_')[1] == '2gang') {
                                                         console.log('2 công tắc');
                                                         navigate('Scenario');

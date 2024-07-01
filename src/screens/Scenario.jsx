@@ -59,21 +59,21 @@ export default function Scenario() {
     }, [scenarioId])
 
     const [scenario, setScenario] = useState([]);
-    const runScenario = async () => {
-        try {
-            let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            for (let value of scenarios) {
-                if (value.body.entity_id.includes('switch')) {
-                    const result = await postData(value.url, value.body, currentUser.token);
-                    await delay(1000); // Dừng lại 1 giây
-                }
-            }
-            alert('Chạy kịch bản thành công!')
-        } catch (e) {
-            console.error(e);
-            alert("Chạy kịch bản thất bại")
-        }
-    }
+    // const runScenario = async () => {
+    //     try {
+    //         // let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    //         for (let value of scenarios) {
+    //             if (value.body.entity_id.includes('switch')) {
+    //                 const result = await postData(value.url, value.body, currentUser.token);
+    //                 // await delay(1000); // Dừng lại 1 giây
+    //             }
+    //         }
+    //         alert('Chạy kịch bản thành công!')
+    //     } catch (e) {
+    //         console.error(e);
+    //         alert("Chạy kịch bản thất bại")
+    //     }
+    // }
     const [powerOnBehavior, setPowerOnBehavior] = useState('On');
     const [modalPowerOnBehavior, setModalPowerOnBehavior] = useState(false);
     const handleOnBehaviorPress = async (value) => {
@@ -96,13 +96,7 @@ export default function Scenario() {
         // const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior1(value);
         setModalPowerOnBehavior1(false);
-        // if (recordScenario) {
-        //     setScenario([...scenario, {
-        //         url: `/api/services/select/select_option`,
-        //         body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: value.toLowerCase() },
-        //         accessToken: nowUser.token
-        //     }])
-        // }
+       
     };
     const [powerOnBehavior2, setPowerOnBehavior2] = useState('On');
     const [modalPowerOnBehavior2, setModalPowerOnBehavior2] = useState(false);
@@ -559,7 +553,6 @@ export default function Scenario() {
 
     const handleRunOrSaveScenario = async () => {
         /**
-         * STEP 6: Chú ý check lại các key-value tương ứng trong Map để ghép lại thành entity id để đẩy kịch bản vào db
          */
         // Luư kịch bản
         if (scenarioId == null) {
@@ -640,9 +633,9 @@ export default function Scenario() {
             }
         }
         // Chạy kịch bản
-        else {
-            runScenario()
-        }
+        // else {
+        //     runScenario()
+        // }
     }
     return (
         <SafeAreaView style={[styles.customSafeArea, { backgroundColor: colors.white }]}>
@@ -958,23 +951,7 @@ export default function Scenario() {
                         return <Text key={index}>{e.url}</Text>
                     })}
 
-                    {/* <View style={scenarioCss.switchRow}>
-                        <TouchableOpacity
-                            style={[recordScenario ? scenarioCss.buttonScenarioRecord : (isRunScenario ? scenarioCss.buttonScenarioDisable : scenarioCss.buttonScenario), { marginRight: 8 }]}
-                            onPress={handlePlayOrSetScenario}
-                            disabled={isRunScenario}
-                        >
-                            <Text style={[scenarioCss.buttonText, { color: colors.white }]}>{(scenario.length > 0 && !recordScenario) ? 'Chạy kịch bản' : (scenario.length == 0 && !recordScenario ? 'Ghi lại kịch bản' : ('Dừng ghi'))}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[(scenario.length > 0 && !recordScenario && !isRunScenario) ? scenarioCss.buttonScenario : scenarioCss.buttonScenarioDisable, { marginLeft: 8 }]}
-                            disabled={scenario.length == 0 || isRunScenario}
-                            onPress={handleDeleteScenario}
-                        >
-                            <Text style={[scenarioCss.buttonText, { color: colors.white }]}>Xóa kịch bản</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={scenarioCss.separator} /> */}
+                    
                 </View>
             </ScrollView>
         </SafeAreaView>

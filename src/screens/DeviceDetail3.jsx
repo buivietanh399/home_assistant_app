@@ -16,13 +16,16 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { useNavigation } from "@react-navigation/native";
 import { device } from "../../utils/device";
 import { oneHundredElement, scenarioKey, switchKey, userKey } from "../constants/common";
-import { switchColor } from "../constants/switchColor";
+import { switchColor_3gang } from "../constants/switchColor";
 import useStore from "../../utils/store";
 import { getData, postData } from "../../utils/commonRequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function DeviceDetail3(props) {
+
+    const devices_3gang = ["0x60a423fffe111699", "0xe8e07efffebff0b5"];
+
     //navigation
     const navigation = useNavigation();
     const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
@@ -36,13 +39,7 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior(value);
         setModalPowerOnBehavior(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+       
     };
     const [powerOnBehavior1, setPowerOnBehavior1] = useState('On');
     const [modalPowerOnBehavior1, setModalPowerOnBehavior1] = useState(false);
@@ -50,13 +47,7 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior1(value);
         setModalPowerOnBehavior1(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+       
     };
     const [powerOnBehavior2, setPowerOnBehavior2] = useState('On');
     const [modalPowerOnBehavior2, setModalPowerOnBehavior2] = useState(false);
@@ -64,13 +55,7 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior2(value);
         setModalPowerOnBehavior2(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+      
     };
     const [powerOnBehavior3, setPowerOnBehavior3] = useState('On');
     const [modalPowerOnBehavior3, setModalPowerOnBehavior3] = useState(false);
@@ -78,35 +63,17 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior3_begin') + entityId + switchKey.get('powerOnBehavior3_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior3(value);
         setModalPowerOnBehavior3(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior3_begin') + entityId + switchKey.get('powerOnBehavior3_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+       
     };
 
     const [switchStatus1, setSwitchStatus1] = useState(true);
     const handleChangeSwitchStatus1 = async () => {
         if (switchStatus1) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+          
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+           
         }
         setSwitchStatus1(!switchStatus1);
     }
@@ -115,22 +82,10 @@ export default function DeviceDetail3(props) {
     const handleChangeSwitchStatus2 = async () => {
         if (switchStatus2) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+           
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         }
         setSwitchStatus2(!switchStatus2);
     }
@@ -139,22 +94,10 @@ export default function DeviceDetail3(props) {
     const handleChangeSwitchStatus3 = async () => {
         if (switchStatus3) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('state3_begin') + entityId + switchKey.get('state3_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         }
         setSwitchStatus3(!switchStatus3);
     }
@@ -165,13 +108,7 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: value.toLowerCase() }, nowUser.token);
         setIndicatorMode(value);
         setModalIndicatorMode(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+        
     };
 
     const [brightness, setBrightness] = useState(0);
@@ -180,13 +117,7 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('brightness_begin') + entityId + switchKey.get('brightness_end'), value: value }, nowUser.token);
         setBrightness(value);
         setModalBrightness(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('brightness_begin') + entityId + switchKey.get('brightness_end'), value: value },
-                accessToken: nowUser.token
-            }])
-        }
+       
     };
 
     const [onColor, setOnColor] = useState("");
@@ -195,13 +126,7 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end'), option: value }, nowUser.token);
         setOnColor(value);
         setModalOnColor(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end'), option: value },
-                accessToken: nowUser.token
-            }])
-        }
+       
     };
 
     const [offColor, setOffColor] = useState("");
@@ -210,35 +135,17 @@ export default function DeviceDetail3(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value }, nowUser.token);
         setOffColor(value);
         setModalOffColor(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value },
-                accessToken: nowUser.token
-            }])
-        }
+        
     };
 
     const [childLock, setChildLock] = useState(false);
     const handleChildLock = async () => {
         if (!childLock) {
             const result = await postData(`/api/services/lock/lock`, { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/lock/lock`,
-                    body: { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         } else {
             const result = await postData(`/api/services/lock/unlock`, { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/lock/unlock`,
-                    body: { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         }
         setChildLock(!childLock);
     }
@@ -247,22 +154,10 @@ export default function DeviceDetail3(props) {
     const handleBlacklightMode = async () => {
         if (backlightMode) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+           
         }
         setBacklightMode(!backlightMode);
     }
@@ -270,13 +165,7 @@ export default function DeviceDetail3(props) {
     const [countdown1, setCountdown1] = useState(0);
     const handleCountdown1 = async (value) => {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown1_begin') + entityId + switchKey.get('countdown1_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('countdown1_begin') + entityId + switchKey.get('countdown1_end'), value: parseInt(value.nativeEvent.text.trim()) },
-                accessToken: nowUser.token
-            }])
-        }
+        
     }
     const handleChangeCountdown1 = async (value) => {
         setCountdown1(parseInt(value.nativeEvent.text.trim()));
@@ -285,13 +174,7 @@ export default function DeviceDetail3(props) {
     const [countdown2, setCountdown2] = useState(0);
     const handleCountdown2 = async (value) => {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown2_begin') + entityId + switchKey.get('countdown2_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('countdown2_begin') + entityId + switchKey.get('countdown2_end'), value: parseInt(value.nativeEvent.text.trim()) },
-                accessToken: nowUser.token
-            }])
-        }
+        
     }
     const handleChangeCountdown2 = async (value) => {
         setCountdown2(parseInt(value.nativeEvent.text.trim()));
@@ -300,13 +183,7 @@ export default function DeviceDetail3(props) {
     const [countdown3, setCountdown3] = useState(0);
     const handleCountdown3 = async (value) => {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown3_begin') + entityId + switchKey.get('countdown3_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('countdown3_begin') + entityId + switchKey.get('countdown3_end'), value: parseInt(value.nativeEvent.text.trim()) },
-                accessToken: nowUser.token
-            }])
-        }
+       
     }
     const handleChangeCountdown3 = async (value) => {
         setCountdown3(parseInt(value.nativeEvent.text.trim()));
@@ -412,8 +289,10 @@ export default function DeviceDetail3(props) {
 
     const fetchOnColor = async (token) => {
         try {
-            let device = await getData(`/api/states/${switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end')}`, token)
-            setOnColor(device.state)
+            if (entityId.split('_')[0]  !== "0x60a423fffe111699") {
+                let device = await getData(`/api/states/${switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end')}`, token)
+                setOnColor(device.state);
+            }
         } catch (error) {
             console.error('Failed to load device:', error);
         }
@@ -421,8 +300,10 @@ export default function DeviceDetail3(props) {
 
     const fetchOffColor = async (token) => {
         try {
-            let device = await getData(`/api/states/${switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end')}`, token)
-            setOffColor(device.state)
+            if (entityId.split('_')[0]  !== "0x60a423fffe111699") {
+                let device = await getData(`/api/states/${switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end')}`, token)
+                setOffColor(device.state)
+            }
         } catch (error) {
             console.error('Failed to load device:', error);
         }
@@ -447,13 +328,13 @@ export default function DeviceDetail3(props) {
                     setNowUser(JSON.parse(user));
                     fetchStatus1(userParsed.token);
                     fetchStatus2(userParsed.token);
-                    // fetchStatus3(userParsed.token);
+                    fetchStatus3(userParsed.token);
                     fetchBlacklight(userParsed.token);
                     fetchChildLock(userParsed.token);
                     fetchPowerOnBehavior(userParsed.token);
                     fetchPowerOnBehavior1(userParsed.token);
                     fetchPowerOnBehavior2(userParsed.token);
-                    // fetchPowerOnBehavior3(userParsed.token);
+                    fetchPowerOnBehavior3(userParsed.token);
                     fetchBrightNess(userParsed.token);
                     fetchOnColor(userParsed.token);
                     fetchOffColor(userParsed.token);
@@ -482,6 +363,7 @@ export default function DeviceDetail3(props) {
                 fetchPowerOnBehavior(nowUser.token);
                 fetchPowerOnBehavior1(nowUser.token);
                 fetchPowerOnBehavior2(nowUser.token);
+                fetchPowerOnBehavior3(nowUser.token);
                 fetchBrightNess(nowUser.token);
                 fetchOnColor(nowUser.token);
                 fetchOffColor(nowUser.token);
@@ -684,36 +566,7 @@ export default function DeviceDetail3(props) {
         checkHaveScenario();
     }, []);
 
-    const handleDeleteScenario = async () => {
-        try {
-            const localScenario = await AsyncStorage.removeItem(scenarioKey);
-            setrecordScenario(false);
-            setScenario([]);
-        } catch (error) {
-            console.error('Failed to load localScenario:', error);
-        }
-    }
-    const [isRunScenario, setIsRunScenario] = useState(false);
-    const handlePlayOrSetScenario = async () => {
-        // ghi kịch bản
-        if (scenario.length == 0 && recordScenario == false) {
-            setrecordScenario(true);
-        } else if (scenario.length > 0 && recordScenario == false) {
-            setIsRunScenario(true)
-            // chạy kịch bản
-            let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            await delay(1000); // Dừng lại 1 giây
-            for (let value of scenario) {
-                const result = await postData(value.url, value.body, nowUser.token);
-                await delay(1000); // Dừng lại 1 giây
-            }
-            setIsRunScenario(false)
-        } else if (recordScenario == true) {
-            // Dừng ghi
-            setrecordScenario(false);
-            await AsyncStorage.setItem(scenarioKey, JSON.stringify(scenario));
-        }
-    }
+   
 
     useEffect(() => {
         console.log(scenario);
@@ -847,67 +700,73 @@ export default function DeviceDetail3(props) {
                         <Text style={deviceCss.value}>{brightness + '%'}</Text>
                     </TouchableOpacity>
                     <View style={deviceCss.separator} />
-
-                    <TouchableOpacity style={deviceCss.settingRow} onPress={() => { setModalOnColor(true); }}>
-                        <Text style={deviceCss.label}>ON Color</Text>
-                        <Modal
-                            // animationType="slide"
-                            transparent={true}
-                            visible={modalOnColor}
-                            onRequestClose={() => setModalOnColor(false)}
-                        >
-                            <View style={deviceCss.modalContainer}>
-                                <View style={deviceCss.modalView}>
-                                    <Text style={deviceCss.modalText}>Select ON Color</Text>
-                                    <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
-                                        {switchColor.map((value, index) => {
-                                            return (
-                                                <TouchableOpacity style={deviceCss.button} onPress={() => handleOnColorPress(value)} key={index}>
-                                                    <Text style={deviceCss.buttonText}>{value}</Text>
-                                                </TouchableOpacity>
-                                            );
-                                        })}
-                                        <TouchableOpacity style={deviceCss.button} onPress={() => setModalOnColor(false)}>
-                                            <Text style={deviceCss.buttonText}>Cancel</Text>
-                                        </TouchableOpacity>
-                                    </ScrollView>
+                {entityId.split('_')[0] != "0x60a423fffe111699" && 
+                    <>
+                        <TouchableOpacity style={deviceCss.settingRow} onPress={() => { setModalOnColor(true); }}>
+                            <Text style={deviceCss.label}>ON Color</Text>
+                            <Modal
+                                // animationType="slide"
+                                transparent={true}
+                                visible={modalOnColor}
+                                onRequestClose={() => setModalOnColor(false)}
+                            >
+                                <View style={deviceCss.modalContainer}>
+                                    <View style={deviceCss.modalView}>
+                                        <Text style={deviceCss.modalText}>Select ON Color</Text>
+                                        <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                            {switchColor_3gang.map((value, index) => {
+                                                return (
+                                                    <TouchableOpacity style={deviceCss.button} onPress={() => handleOnColorPress(value)} key={index}>
+                                                        <Text style={deviceCss.buttonText}>{value}</Text>
+                                                    </TouchableOpacity>
+                                                );
+                                            })}
+                                            <TouchableOpacity style={deviceCss.button} onPress={() => setModalOnColor(false)}>
+                                                <Text style={deviceCss.buttonText}>Cancel</Text>
+                                            </TouchableOpacity>
+                                        </ScrollView>
+                                    </View>
                                 </View>
-                            </View>
-                        </Modal>
-                        <Text style={deviceCss.value}>{onColor}</Text>
-                    </TouchableOpacity>
-                    <View style={deviceCss.separator} />
-
-                    <TouchableOpacity style={deviceCss.settingRow} onPress={() => { setModalOffColor(true); }}>
-                        <Text style={deviceCss.label}>OFF Color</Text>
-                        <Modal
-                            // animationType="slide"
-                            transparent={true}
-                            visible={modalOffColor}
-                            onRequestClose={() => setModalOffColor(false)}
-                        >
-                            <View style={deviceCss.modalContainer}>
-                                <View style={deviceCss.modalView}>
-                                    <Text style={deviceCss.modalText}>Select OFF Color</Text>
-                                    <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
-                                        {switchColor.map((value, index) => {
-                                            return (
-                                                <TouchableOpacity style={deviceCss.button} onPress={() => handleOffColorPress(value)} key={index}>
-                                                    <Text style={deviceCss.buttonText}>{value}</Text>
-                                                </TouchableOpacity>
-                                            );
-                                        })}
-                                        <TouchableOpacity style={deviceCss.button} onPress={() => setModalOffColor(false)}>
-                                            <Text style={deviceCss.buttonText}>Cancel</Text>
-                                        </TouchableOpacity>
-                                    </ScrollView>
+                            </Modal>
+                            <Text style={deviceCss.value}>{onColor}</Text>
+                        </TouchableOpacity>
+                        <View style={deviceCss.separator} />
+                    </>
+                }
+                
+                {entityId.split('_')[0] != "0x60a423fffe111699" && 
+                    <>
+                        <TouchableOpacity style={deviceCss.settingRow} onPress={() => { setModalOffColor(true); }}>
+                            <Text style={deviceCss.label}>OFF Color</Text>
+                            <Modal
+                                // animationType="slide"
+                                transparent={true}
+                                visible={modalOffColor}
+                                onRequestClose={() => setModalOffColor(false)}
+                            >
+                                <View style={deviceCss.modalContainer}>
+                                    <View style={deviceCss.modalView}>
+                                        <Text style={deviceCss.modalText}>Select OFF Color</Text>
+                                        <ScrollView contentContainerStyle={{ alignItems: 'center', width: device.width * 0.8 }}>
+                                            {switchColor_3gang.map((value, index) => {
+                                                return (
+                                                    <TouchableOpacity style={deviceCss.button} onPress={() => handleOffColorPress(value)} key={index}>
+                                                        <Text style={deviceCss.buttonText}>{value}</Text>
+                                                    </TouchableOpacity>
+                                                );
+                                            })}
+                                            <TouchableOpacity style={deviceCss.button} onPress={() => setModalOffColor(false)}>
+                                                <Text style={deviceCss.buttonText}>Cancel</Text>
+                                            </TouchableOpacity>
+                                        </ScrollView>
+                                    </View>
                                 </View>
-                            </View>
-                        </Modal>
-                        <Text style={deviceCss.value}>{offColor}</Text>
-                    </TouchableOpacity>
-                    <View style={deviceCss.separator} />
-
+                            </Modal>
+                            <Text style={deviceCss.value}>{offColor}</Text>
+                        </TouchableOpacity>
+                        <View style={deviceCss.separator} />
+                    </>
+                }
 
                     <View style={deviceCss.switchRow}>
                         <Text style={deviceCss.label}>Status L1</Text>
@@ -1008,7 +867,7 @@ export default function DeviceDetail3(props) {
                     <View style={deviceCss.separator} />
 
                     <TouchableOpacity style={deviceCss.settingRow} onPress={() => {
-                        setModalPowerOnBehavior1(true);
+                        setModalPowerOnBehavior3(true);
                     }}>
                         <Text style={deviceCss.label}>Power-on behavior L3</Text>
                         <Modal
@@ -1042,7 +901,7 @@ export default function DeviceDetail3(props) {
                     <View style={deviceCss.separator} />
 
                     <View style={deviceCss.switchRow}>
-                        <Text style={deviceCss.label}>Contdown L1 (s)</Text>
+                        <Text style={deviceCss.label}>Countdown L1 (s)</Text>
                         <TextInput
                             value={countdown1}
                             onSubmitEditing={handleCountdown1}
@@ -1055,7 +914,7 @@ export default function DeviceDetail3(props) {
                     <View style={deviceCss.separator} />
 
                     <View style={deviceCss.switchRow}>
-                        <Text style={deviceCss.label}>Contdown L2 (s)</Text>
+                        <Text style={deviceCss.label}>Countdown L2 (s)</Text>
                         <TextInput
                             value={countdown2}
                             onSubmitEditing={handleCountdown2}
@@ -1068,7 +927,7 @@ export default function DeviceDetail3(props) {
                     <View style={deviceCss.separator} />
 
                     <View style={deviceCss.switchRow}>
-                        <Text style={deviceCss.label}>Contdown L3 (s)</Text>
+                        <Text style={deviceCss.label}>Countdown L3 (s)</Text>
                         <TextInput
                             value={countdown3}
                             onSubmitEditing={handleCountdown3}

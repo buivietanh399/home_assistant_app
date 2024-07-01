@@ -23,6 +23,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function DeviceDetail(props) {
+
+    const devices_2gang = ["0xa4c138c99b46001a", "0x187a3efffe9e95d4", "0x8c65a3fffe529570"];
+
     //navigation
     const navigation = useNavigation();
     const { currentUser, setCurrentUser, removeCurrentUser, entityId, setEntityId } = useStore();
@@ -33,19 +36,13 @@ export default function DeviceDetail(props) {
     const [powerOnBehavior, setPowerOnBehavior] = useState('On');
     const [modalPowerOnBehavior, setModalPowerOnBehavior] = useState(false);
     /**
-     * STEP 4: Chú ý check lại các đường dẫn api Post và payload của chúng để phù hợp với thiết bị
      */
+    
+
     const handleOnBehaviorPress = async (value) => {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior(value);
         setModalPowerOnBehavior(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior_begin') + entityId + switchKey.get('powerOnBehavior_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
     };
     const [powerOnBehavior1, setPowerOnBehavior1] = useState('On');
     const [modalPowerOnBehavior1, setModalPowerOnBehavior1] = useState(false);
@@ -53,13 +50,7 @@ export default function DeviceDetail(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior1(value);
         setModalPowerOnBehavior1(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+        
     };
     const [powerOnBehavior2, setPowerOnBehavior2] = useState('On');
     const [modalPowerOnBehavior2, setModalPowerOnBehavior2] = useState(false);
@@ -67,35 +58,16 @@ export default function DeviceDetail(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: value.toLowerCase() }, nowUser.token);
         setPowerOnBehavior2(value);
         setModalPowerOnBehavior2(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+       
     };
 
     const [switchStatus1, setSwitchStatus1] = useState(true);
     const handleChangeSwitchStatus1 = async () => {
         if (switchStatus1) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') },
-                    accessToken: nowUser.token
-                }])
-            }
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('state1_begin') + entityId + switchKey.get('state1_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+           
         }
         setSwitchStatus1(!switchStatus1);
     }
@@ -104,22 +76,10 @@ export default function DeviceDetail(props) {
     const handleChangeSwitchStatus2 = async () => {
         if (switchStatus2) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('state2_begin') + entityId + switchKey.get('state2_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         }
         setSwitchStatus2(!switchStatus2);
     }
@@ -130,13 +90,7 @@ export default function DeviceDetail(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: value.toLowerCase() }, nowUser.token);
         setIndicatorMode(value);
         setModalIndicatorMode(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('indicatorMode_begin') + entityId + switchKey.get('indicatorMode_end'), option: value.toLowerCase() },
-                accessToken: nowUser.token
-            }])
-        }
+        
     };
 
     const [brightness, setBrightness] = useState(0);
@@ -145,13 +99,7 @@ export default function DeviceDetail(props) {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('brightness_begin') + entityId + switchKey.get('brightness_end'), value: value }, nowUser.token);
         setBrightness(value);
         setModalBrightness(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('brightness_begin') + entityId + switchKey.get('brightness_end'), value: value },
-                accessToken: nowUser.token
-            }])
-        }
+        
     };
 
     const [onColor, setOnColor] = useState("");
@@ -160,13 +108,7 @@ export default function DeviceDetail(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end'), option: value }, nowUser.token);
         setOnColor(value);
         setModalOnColor(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end'), option: value },
-                accessToken: nowUser.token
-            }])
-        }
+        
     };
 
     const [offColor, setOffColor] = useState("");
@@ -175,35 +117,16 @@ export default function DeviceDetail(props) {
         const result = await postData(`/api/services/select/select_option`, { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value }, nowUser.token);
         setOffColor(value);
         setModalOffColor(false);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/select/select_option`,
-                body: { entity_id: switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end'), option: value },
-                accessToken: nowUser.token
-            }])
-        }
     };
 
     const [childLock, setChildLock] = useState(false);
     const handleChildLock = async () => {
         if (!childLock) {
             const result = await postData(`/api/services/lock/lock`, { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/lock/lock`,
-                    body: { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+
         } else {
             const result = await postData(`/api/services/lock/unlock`, { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/lock/unlock`,
-                    body: { entity_id: switchKey.get('childLock_begin') + entityId + switchKey.get('childLock_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+            
         }
         setChildLock(!childLock);
     }
@@ -212,22 +135,10 @@ export default function DeviceDetail(props) {
     const handleBlacklightMode = async () => {
         if (backlightMode) {
             const result = await postData(`/api/services/switch/turn_off`, { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_off`,
-                    body: { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+         
         } else {
             const result = await postData(`/api/services/switch/turn_on`, { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') }, nowUser.token);
-            if (recordScenario) {
-                setScenario([...scenario, {
-                    url: `/api/services/switch/turn_on`,
-                    body: { entity_id: switchKey.get('blackLight_begin') + entityId + switchKey.get('blackLight_end') },
-                    accessToken: nowUser.token
-                }])
-            }
+           
         }
         setBacklightMode(!backlightMode);
     }
@@ -235,13 +146,7 @@ export default function DeviceDetail(props) {
     const [countdown1, setCountdown1] = useState(0);
     const handleCountdown1 = async (value) => {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown1_begin') + entityId + switchKey.get('countdown1_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('countdown1_begin') + entityId + switchKey.get('countdown1_end'), value: parseInt(value.nativeEvent.text.trim()) },
-                accessToken: nowUser.token
-            }])
-        }
+        
     }
 
     const handleChangeCountdown1 = async (value) => {
@@ -250,13 +155,7 @@ export default function DeviceDetail(props) {
     const [countdown2, setCountdown2] = useState(0);
     const handleCountdown2 = async (value) => {
         const result = await postData(`/api/services/number/set_value`, { entity_id: switchKey.get('countdown2_begin') + entityId + switchKey.get('countdown2_end'), value: parseInt(value.nativeEvent.text.trim()) }, nowUser.token);
-        if (recordScenario) {
-            setScenario([...scenario, {
-                url: `/api/services/number/set_value`,
-                body: { entity_id: switchKey.get('countdown2_begin') + entityId + switchKey.get('countdown2_end'), value: parseInt(value.nativeEvent.text.trim()) },
-                accessToken: nowUser.token
-            }])
-        }
+        
     }
     const handleChangeCountdown2 = async (value) => {
         setCountdown2(parseInt(value.nativeEvent.text.trim()));
@@ -264,7 +163,6 @@ export default function DeviceDetail(props) {
 
     /**
      * Get trạng thái của các nút khi màn hình được hiện 
-     * STEP 5: Chú ý check lại các đường dẫn api GET và payload của chúng để phù hợp với thiết bị
      */
     const fetchStatus1 = async (token) => {
         try {
@@ -317,8 +215,10 @@ export default function DeviceDetail(props) {
 
     const fetchPowerOnBehavior1 = async (token) => {
         try {
-            let device = await getData(`/api/states/${switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end')}`, token)
-            setPowerOnBehavior1(toUpperCaseFirtChar(device.state))
+            if (entityId.split('_')[0] !== "0x187a3efffe9e95d4") {
+                let device = await getData(`/api/states/${switchKey.get('powerOnBehavior1_begin') + entityId + switchKey.get('powerOnBehavior1_end')}`, token)
+                setPowerOnBehavior1(toUpperCaseFirtChar(device.state))
+            }
         } catch (error) {
             console.error('Failed to load device:', error);
         }
@@ -326,8 +226,11 @@ export default function DeviceDetail(props) {
 
     const fetchPowerOnBehavior2 = async (token) => {
         try {
-            let device = await getData(`/api/states/${switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end')}`, token)
-            setPowerOnBehavior2(toUpperCaseFirtChar(device.state))
+       
+            if (entityId.split('_')[0] !== "0x187a3efffe9e95d4") {
+                let device = await getData(`/api/states/${switchKey.get('powerOnBehavior2_begin') + entityId + switchKey.get('powerOnBehavior2_end')}`, token)
+                setPowerOnBehavior2(toUpperCaseFirtChar(device.state));
+            }
         } catch (error) {
             console.error('Failed to load device:', error);
         }
@@ -344,8 +247,10 @@ export default function DeviceDetail(props) {
 
     const fetchOnColor = async (token) => {
         try {
-            let device = await getData(`/api/states/${switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end')}`, token)
-            setOnColor(device.state)
+            if (entityId.split('_')[0] !== "0xa4c138c99b46001a") {
+                let device = await getData(`/api/states/${switchKey.get('onColor_begin') + entityId + switchKey.get('onColor_end')}`, token)
+                setOnColor(device.state);
+            }
         } catch (error) {
             console.error('Failed to load device:', error);
         }
@@ -353,8 +258,10 @@ export default function DeviceDetail(props) {
 
     const fetchOffColor = async (token) => {
         try {
-            let device = await getData(`/api/states/${switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end')}`, token)
-            setOffColor(device.state)
+            if (entityId.split('_')[0] !== "0xa4c138c99b46001a") {
+                let device = await getData(`/api/states/${switchKey.get('offColor_begin') + entityId + switchKey.get('offColor_end')}`, token)
+                setOffColor(device.state);
+            }
         } catch (error) {
             console.error('Failed to load device:', error);
         }
@@ -556,37 +463,6 @@ export default function DeviceDetail(props) {
         checkHaveScenario();
     }, []);
 
-    const handleDeleteScenario = async () => {
-        try {
-            const localScenario = await AsyncStorage.removeItem(scenarioKey);
-            setrecordScenario(false);
-            setScenario([]);
-        } catch (error) {
-            console.error('Failed to load localScenario:', error);
-        }
-    }
-    const [isRunScenario, setIsRunScenario] = useState(false);
-    const handlePlayOrSetScenario = async () => {
-        // ghi kịch bản
-        if (scenario.length == 0 && recordScenario == false) {
-            setrecordScenario(true);
-        } else if (scenario.length > 0 && recordScenario == false) {
-            setIsRunScenario(true)
-            // chạy kịch bản
-            let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            await delay(1000); // Dừng lại 1 giây
-            for (let value of scenario) {
-                const result = await postData(value.url, value.body, nowUser.token);
-                await delay(1000); // Dừng lại 1 giây
-            }
-            setIsRunScenario(false)
-        } else if (recordScenario == true) {
-            // Dừng ghi
-            setrecordScenario(false);
-            await AsyncStorage.setItem(scenarioKey, JSON.stringify(scenario));
-        }
-    }
-
     useEffect(() => {
         console.log(scenario);
     }, [scenario]);
@@ -719,7 +595,8 @@ export default function DeviceDetail(props) {
                         <Text style={deviceCss.value}>{brightness + '%'}</Text>
                     </TouchableOpacity>
                     <View style={deviceCss.separator} />
-
+            {entityId.split('_')[0] != "0xa4c138c99b46001a" && 
+                <>
                     <TouchableOpacity style={deviceCss.settingRow} onPress={() => { setModalOnColor(true); }}>
                         <Text style={deviceCss.label}>ON Color</Text>
                         <Modal
@@ -779,7 +656,8 @@ export default function DeviceDetail(props) {
                         <Text style={deviceCss.value}>{offColor}</Text>
                     </TouchableOpacity>
                     <View style={deviceCss.separator} />
-
+                </>
+            }           
 
                     <View style={deviceCss.switchRow}>
                         <Text style={deviceCss.label}>Status L1</Text>
@@ -800,7 +678,8 @@ export default function DeviceDetail(props) {
                         />
                     </View>
                     <View style={deviceCss.separator} />
-
+            {entityId.split('_')[0] != "0x187a3efffe9e95d4" && 
+                <>
                     <TouchableOpacity style={deviceCss.settingRow} onPress={() => {
                         setModalPowerOnBehavior1(true);
                     }}>
@@ -834,7 +713,8 @@ export default function DeviceDetail(props) {
                         <Text style={deviceCss.value}>{powerOnBehavior1}</Text>
                     </TouchableOpacity>
                     <View style={deviceCss.separator} />
-
+                
+          
                     <TouchableOpacity style={deviceCss.settingRow} onPress={() => {
                         setModalPowerOnBehavior2(true);
                     }}>
@@ -868,9 +748,10 @@ export default function DeviceDetail(props) {
                         <Text style={deviceCss.value}>{powerOnBehavior2}</Text>
                     </TouchableOpacity>
                     <View style={deviceCss.separator} />
-
+                </>
+            }
                     <View style={deviceCss.switchRow}>
-                        <Text style={deviceCss.label}>Contdown L1 (s)</Text>
+                        <Text style={deviceCss.label}>Countdown L1 (s)</Text>
                         <TextInput
                             value={countdown1}
                             onSubmitEditing={handleCountdown1}
@@ -883,7 +764,7 @@ export default function DeviceDetail(props) {
                     <View style={deviceCss.separator} />
 
                     <View style={deviceCss.switchRow}>
-                        <Text style={deviceCss.label}>Contdown L2 (s)</Text>
+                        <Text style={deviceCss.label}>Countdown L2 (s)</Text>
                         <TextInput
                             value={countdown2}
                             onSubmitEditing={handleCountdown2}
@@ -993,33 +874,7 @@ export default function DeviceDetail(props) {
                     </Modal>
                     <View style={deviceCss.separator} />
 
-                    {/* <View style={deviceCss.switchRow}>
-                        <TouchableOpacity
-                            style={deviceCss.buttonScenario}
-                            onPress={() => navigate('Scenario')}
-                        >
-                            <Text style={[deviceCss.buttonText, { color: colors.white }]}>Xem kịch bản</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={deviceCss.separator} /> */}
-
-                    {/* <View style={deviceCss.switchRow}>
-                        <TouchableOpacity
-                            style={[recordScenario ? deviceCss.buttonScenarioRecord : (isRunScenario ? deviceCss.buttonScenarioDisable : deviceCss.buttonScenario), { marginRight: 8 }]}
-                            onPress={handlePlayOrSetScenario}
-                            disabled={isRunScenario}
-                        >
-                            <Text style={[deviceCss.buttonText, { color: colors.white }]}>{(scenario.length > 0 && !recordScenario) ? 'Chạy kịch bản' : (scenario.length == 0 && !recordScenario ? 'Ghi lại kịch bản' : ('Dừng ghi'))}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[(scenario.length > 0 && !recordScenario && !isRunScenario) ? deviceCss.buttonScenario : deviceCss.buttonScenarioDisable, { marginLeft: 8 }]}
-                            disabled={scenario.length == 0 || isRunScenario}
-                            onPress={handleDeleteScenario}
-                        >
-                            <Text style={[deviceCss.buttonText, { color: colors.white }]}>Xóa kịch bản</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={deviceCss.separator} /> */}
+                   
                 </View>
             </ScrollView>
         </SafeAreaView>

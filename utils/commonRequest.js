@@ -1,6 +1,6 @@
 // Hàm gọi API sử dụng phương thức GET
 
-const BASE_URL = 'http://192.168.187.128:8123'
+const BASE_URL = 'http://192.168.194.52:8123'
 
 export async function getData(url, accessToken) {
     try {

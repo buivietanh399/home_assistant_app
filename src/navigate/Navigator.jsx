@@ -10,13 +10,15 @@ import Scenario from "../screens/Scenario";
 import Scenario3 from "../screens/Scenario3";
 import DeviceDetail3 from "../screens/DeviceDetail3";
 import UserManagement from "../screens/UserManagement";
+import PermitJoin from "../screens/PermitJoin";
+import DoorSensor from "../screens/DoorSensor";
 
 const Stack = createNativeStackNavigator();
 export default function Navigator() {
     // const isDarkTheme = useSelector((state) => state.theme.isDarkTheme);
     return (
         /**
-         * STEP 1: Khai báo thêm các màn mới
+
          */
         <NavigationContainer>
             <Stack.Navigator initialRouteName="UIScreen" screenOptions={{ headerShown: false }} >
@@ -25,6 +27,8 @@ export default function Navigator() {
                 <Stack.Screen name={"Smart"} component={Smart} />
                 <Stack.Screen name={"Login"} component={Login} />
                 <Stack.Screen name={"Setting"} component={Setting} />
+                <Stack.Screen name={"PermitJoin"} component={PermitJoin} />
+                <Stack.Screen name={"DoorSensor"} component={DoorSensor} />
                 <Stack.Screen name={"DeviceDetail"} component={DeviceDetail} />
                 <Stack.Screen name={"DeviceDetail3"} component={DeviceDetail3} />
                 <Stack.Screen name={"Scenario"} component={Scenario} />

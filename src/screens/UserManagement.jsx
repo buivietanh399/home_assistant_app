@@ -11,6 +11,7 @@ import {
     Alert,
     Modal,
     TextInput,
+    Switch,
 } from "react-native";
 import { styles } from "../components/GlobalStyles";
 import colors from "../constants/colors";
@@ -24,12 +25,6 @@ import { device } from "../../utils/device";
 export default function UserManagement() {
     const navigation = useNavigation();
     const { navigate, goBack } = navigation;
-    // const [confirmModal, setComfirmModal] = useState(false);
-    // const [currentUserId, setCurrentUserId] = useState(null);
-    // const handleConfirmModal = (id) => {
-    //     setCurrentUserId(id);
-    //     setComfirmModal(true);
-    // }
     const { currentUser, setCurrentUser, removeCurrentUser } = useStore();
     const showAlert = async (userName, name) => {
         Alert.alert(
@@ -93,7 +88,7 @@ export default function UserManagement() {
                 email: email,
                 login: userName,
             }
-            const response = await postDataBackend('/api/users', reqBody, currentUser.tokenBackend);
+            const response = await postDataBackend(`/api/users?isAdmin=${isAdmin}`, reqBody, currentUser.tokenBackend);
             if (response) {
                 alert("Tạo người dùng thành công, mật khẩu mặc định là 123456aA@");
                 setModalNewUser(false);
@@ -101,6 +96,7 @@ export default function UserManagement() {
                 setLastName('');
                 setUserName('');
                 setEmail('');
+                setIsAdmin(false);
                 await fetchUser();
             }
         } catch (e) {
@@ -115,6 +111,8 @@ export default function UserManagement() {
         return regex.test(email);
     }
 
+    const [isAdmin, setIsAdmin] = useState(false);
+
     return (
         <SafeAreaView style={[styles.customSafeArea]}>
             <ScrollView style={styles.container}>
@@ -128,7 +126,9 @@ export default function UserManagement() {
                     <View style={{ width: 24 }}></View>
                 </View>
                 {users.map((item, index) => {
-                    return (
+                    
+                    if (item.id != currentUser.customUserDetails.id)
+                     return (
                         <View key={index}>
                             <View style={userManagementCss.item}>
                                 <TouchableOpacity onPress={() => { }} style={{ flex: 1 }}>
@@ -196,6 +196,14 @@ export default function UserManagement() {
                                         style={{ borderColor: 'gray', borderWidth: 1, paddingHorizontal: 5, borderRadius: 5, height: 40 }}
                                     />
                                 </View>
+                                <View style={[userManagementCss.inputContainer, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+                                    <Text style={userManagementCss.inputLabel}>Có phải là Quản trị viên?</Text>
+                                    <Switch
+                                        value={isAdmin}
+                                        onValueChange={() => {setIsAdmin(!isAdmin)}}
+                                        style={{ height: 20 }}
+                                    />
+                                </View>                    
                                 <View style={userManagementCss.footerModal}>
                                     <TouchableOpacity style={userManagementCss.buttonModal} onPress={() => handleNewUser()}>
                                         <Text style={userManagementCss.buttonTextModal}>XÁC NHẬN</Text>
@@ -284,7 +292,7 @@ const userManagementCss = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         maxHeight: '80%',
-        marginBottom: 200
+        // marginBottom: 200
     },
     modalText: {
         fontSize: 18,
